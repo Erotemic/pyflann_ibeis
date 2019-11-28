@@ -1,6 +1,14 @@
 #include_directories(${CMAKE_SOURCE_DIR}/include algorithms ext util nn .)
 
+message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
+set(FLANN_VERSION ${FLANN_IBEIS_VERSION})
+message(STATUS "FLANN_VERSION = ${FLANN_VERSION}")
 add_definitions(-D_FLANN_IBEIS_VERSION=${FLANN_IBEIS_VERSION})
+add_definitions(-DFLANN_IBEIS_VERSION_=${FLANN_IBEIS_VERSION})
+add_definitions(-DFLANN_IBEIS_VERSION=${FLANN_IBEIS_VERSION})
+add_definitions(-D_FLANN_VERSION=${FLANN_VERSION})
+add_definitions(-DFLANN_VERSION_=${FLANN_VERSION})
+add_definitions(-DFLANN_VERSION=${FLANN_VERSION})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h)
 

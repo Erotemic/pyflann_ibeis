@@ -40,7 +40,14 @@
 #ifdef FLANN_SIGNATURE_
 #undef FLANN_SIGNATURE_
 #endif
-#define FLANN_SIGNATURE_ "FLANN_INDEX_v1.1"
+#define FLANN_SIGNATURE_ "FLANN_IBEIS_INDEX_v2.0"
+
+
+// not sure why I had to do this
+#ifdef FLANN_IBEIS_VERSION_
+#undef FLANN_IBEIS_VERSION_
+#endif
+#define FLANN_IBEIS_VERSION_ "2.0.0"
 
 namespace flann
 {
@@ -57,7 +64,7 @@ struct IndexHeader
         memset(h.signature, 0, sizeof(h.signature));
         strcpy(h.signature, FLANN_SIGNATURE_);
         memset(h.version, 0, sizeof(h.version));
-        strcpy(h.version, _FLANN_IBEIS_VERSION);
+        strcpy(h.version, FLANN_IBEIS_VERSION_);
 
         h.compression = 0;
         h.first_block_size = 0;
