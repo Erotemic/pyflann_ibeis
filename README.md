@@ -1,3 +1,7 @@
+This is a Fork of the FLANN repo, under a different name for use in the IBEIS
+project.
+
+
 FLANN - Fast Library for Approximate Nearest Neighbors
 ======================================================
 
