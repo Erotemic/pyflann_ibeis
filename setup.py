@@ -6,6 +6,28 @@ from os.path import exists
 from collections import OrderedDict
 
 
+def parse_version(fpath='pyflann_ibeis/__init__.py'):
+    """
+    Statically parse the version number from a python file
+
+
+    """
+    import ast
+    if not exists(fpath):
+        raise ValueError('fpath={!r} does not exist'.format(fpath))
+    with open(fpath, 'r') as file_:
+        sourcecode = file_.read()
+    pt = ast.parse(sourcecode)
+    class VersionVisitor(ast.NodeVisitor):
+        def visit_Assign(self, node):
+            for target in node.targets:
+                if getattr(target, 'id', None) == '__version__':
+                    self.version = node.value.s
+    visitor = VersionVisitor()
+    visitor.visit(pt)
+    return visitor.version
+
+
 def parse_long_description(fpath='README.md'):
     """
     Reads README text, but doesn't break if README does not exist.
@@ -95,13 +117,15 @@ except Exception:
     raise RuntimeError('FAILED TO ADD BUILD CONSTRUCTS')
 
 
-NAME = 'pyflann'
-VERSION = '1.10.0'  # TODO: parse and check that the lib version matches
-AUTHORS = ['Marius Muja']
-AUTHOR_EMAIL = 'mariusm@cs.ubc.ca'
-URL = 'http://www.cs.ubc.ca/~mariusm/flann/'
+NAME = 'pyflann_ibeis'
+
+VERSION = version = parse_version('pyflann_ibeis/__init__.py')  # must be global for git tags
+
+AUTHORS = ['Jon Crall', 'Marius Muja']
+AUTHOR_EMAIL = 'erotemic@gmail.com'
+URL = 'https://github.com/Erotemic/ibeis-flann'
 LICENSE = 'BSD'
-DESCRIPTION = 'FLANN - Fast Library for Approximate Nearest Neighbors'
+DESCRIPTION = 'FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors'
 
 
 KWARGS = OrderedDict(

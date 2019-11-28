@@ -6,11 +6,31 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-project(flann LANGUAGES C CXX)
+project(flann_ibeis LANGUAGES C CXX)
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 
-include(${PROJECT_SOURCE_DIR}/cmake/flann_utils.cmake)
-set(FLANN_VERSION 1.10.0)
+include(${PROJECT_SOURCE_DIR}/CMake/flann_utils.cmake)
+
+function(_pycmd outvar cmd)
+  execute_process(
+    COMMAND python -c "${cmd}"
+    RESULT_VARIABLE _exitcode
+    OUTPUT_VARIABLE _output
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+  if(NOT ${_exitcode} EQUAL 0)
+    message(ERROR "Failed when running python code: \"\"\"
+${cmd}\"\"\"")
+    message(FATAL_ERROR "Python command failed with error code: ${_exitcode}")
+  endif()
+  # Remove supurflous newlines (artifacts of print)
+  string(STRIP "${_output}" _output)
+  set(${outvar} "${_output}" PARENT_SCOPE)
+endfunction()
+_pycmd(FLANN_IBEIS_VERSION "import setup; print(setup.version)")
+
+message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
+
 DISSECT_VERSION()
 GET_OS_INFO()
 
@@ -27,7 +47,7 @@ endif ()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 # Add an "uninstall" target
-CONFIGURE_FILE ("${PROJECT_SOURCE_DIR}/cmake/uninstall_target.cmake.in"
+CONFIGURE_FILE ("${PROJECT_SOURCE_DIR}/CMake/uninstall_target.cmake.in"
     "${PROJECT_BINARY_DIR}/uninstall_target.cmake" IMMEDIATE @ONLY)
 ADD_CUSTOM_TARGET (uninstall "${CMAKE_COMMAND}" -P
     "${PROJECT_BINARY_DIR}/uninstall_target.cmake")
@@ -52,7 +72,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(TEST_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test)
 
 option(BUILD_C_BINDINGS "Build C bindings" ON)
-option(BUILD_MATLAB_BINDINGS "Build Matlab bindings" ON)
 option(BUILD_CUDA_LIB "Build CUDA library" OFF)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_TESTS "Build tests" ON)
@@ -109,14 +128,6 @@ if (USE_MPI AND HDF5_IS_PARALLEL)
 endif()
 
 
-if (BUILD_TESTS)
-find_package(GTest)
-if (NOT GTEST_FOUND)
-	message(WARNING "gtest library not found, some tests will not be run")
-endif()
-endif()
-
-
 if (USE_OPENMP)
     find_package(OpenMP)
     if(OPENMP_FOUND)
@@ -158,7 +169,7 @@ else()
 endif()
 
 # install and export variables
-set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+set(config_install_dir "lib/CMake/${PROJECT_NAME}")
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 set(version_config "${generated_dir}/flann-config-version.cmake")
 set(project_config "${generated_dir}/flann-config.cmake")
@@ -172,7 +183,7 @@ if (SKBUILD)
 endif()
 
 if (NOT SKBUILD)
-  add_subdirectory( cmake )
+  add_subdirectory( CMake )
 endif()
 add_subdirectory( src )
 if (BUILD_EXAMPLES)
@@ -181,19 +192,16 @@ endif(BUILD_EXAMPLES)
 if (BUILD_TESTS)
   add_subdirectory( test )
 endif (BUILD_TESTS)
-if (BUILD_DOC)
-  add_subdirectory( doc )
-endif (BUILD_DOC)
 
 # CMake configuration file creation
 # Include module with fuction 'write_basic_package_version_file'
 include(CMakePackageConfigHelpers)
 
 # Configure 'flann-config-version.cmake'
-# Note: FLANN_VERSION is used as a VERSION
+# Note: FLANN_IBEIS_VERSION is used as a VERSION
 write_basic_package_version_file(
     "${version_config}"
-    VERSION ${FLANN_VERSION}
+    VERSION ${FLANN_IBEIS_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
@@ -202,21 +210,21 @@ write_basic_package_version_file(
 #   * targets_export_name
 #   * PROJECT_NAME
 configure_package_config_file(
-    "cmake/Config.cmake.in"
+  "CMake/Config.cmake.in"
     "${project_config}"
     INSTALL_DESTINATION "${config_install_dir}"
 )
 
 if (NOT SKBUILD)
   # Config
-  #   * <prefix>/lib/cmake/flann/flann-config.cmake
-  #   * <prefix>/lib/cmake/flann/flann-config-version.cmake
+  #   * <prefix>/lib/CMake/flann/flann-config.cmake
+  #   * <prefix>/lib/CMake/flann/flann-config-version.cmake
   install(
       FILES "${project_config}" "${version_config}"
       DESTINATION "${config_install_dir}"
   )
   # Config
-  #   * <prefix>/lib/cmake/flann/flann-targets.cmake
+  #   * <prefix>/lib/CMake/flann/flann-targets.cmake
   install(
       EXPORT "${targets_export_name}"
       NAMESPACE "${namespace}"
@@ -255,10 +263,10 @@ set(CPACK_SET_DESTDIR ON)
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_CONTACT "Marius Muja")
 set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-SET(CPACK_PACKAGE_VERSION ${FLANN_VERSION})
-SET(CPACK_PACKAGE_VERSION_MAJOR ${FLANN_VERSION_MAJOR})
-SET(CPACK_PACKAGE_VERSION_MINOR ${FLANN_VERSION_MINOR})
-SET(CPACK_PACKAGE_VERSION_PATCH ${FLANN_VERSION_PATCH})
+SET(CPACK_PACKAGE_VERSION ${FLANN_IBEIS_VERSION})
+SET(CPACK_PACKAGE_VERSION_MAJOR ${FLANN_IBEIS_VERSION_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${FLANN_IBEIS_VERSION_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${FLANN_IBEIS_VERSION_PATCH})
 include(CPack)
 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=`grep "set(FLANN_VERSION" CMakeLists.txt  | sed 's/[^0-9]*\([0-9]*\.[0-9]*\.[0-9]*\)[^0-9]*/\1/'`
+VERSION=`grep "set(FLANN_IBEIS_VERISON" CMakeLists.txt  | sed 's/[^0-9]*\([0-9]*\.[0-9]*\.[0-9]*\)[^0-9]*/\1/'`
 
 echo "Creating flann-$VERSION-src.zip"
 

@@ -6,7 +6,7 @@ includedir=${prefix}/include
 
 Name: @PROJECT_NAME@
 Description: @PKG_DESC@
-Version: @FLANN_VERSION@
+Version: @FLANN_IBEIS_VERISON@
 Requires: @PKG_EXTERNAL_DEPS@
 Libs: -L${libdir} @LZ4_STATIC_LDFLAGS@ -lflann -lflann_cpp
 Cflags: -I${includedir}

@@ -1,6 +1,6 @@
 #include_directories(${CMAKE_SOURCE_DIR}/include algorithms ext util nn .)
 
-add_definitions(-D_FLANN_VERSION=${FLANN_VERSION})
+add_definitions(-D_FLANN_IBEIS_VERSION=${FLANN_IBEIS_VERSION})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h)
 
@@ -64,14 +64,14 @@ else()
 endif()
 
 set_target_properties(flann_cpp PROPERTIES
-   VERSION ${FLANN_VERSION}
+   VERSION ${FLANN_IBEIS_VERSION}
    SOVERSION ${FLANN_SOVERSION}
    DEFINE_SYMBOL FLANN_EXPORTS
 )
 
 if (BUILD_CUDA_LIB)
     set_target_properties(flann_cuda PROPERTIES
-       VERSION ${FLANN_VERSION}
+       VERSION ${FLANN_IBEIS_VERSION}
        SOVERSION ${FLANN_SOVERSION}
        DEFINE_SYMBOL FLANN_EXPORTS
     )
@@ -111,8 +111,10 @@ if (BUILD_C_BINDINGS)
         endif()
     endif()
 
+    message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
+    message(STATUS "FLANN_SOVERSION = ${FLANN_SOVERSION}")
     set_target_properties(flann PROPERTIES
-       VERSION ${FLANN_VERSION}
+       VERSION ${FLANN_IBEIS_VERSION}
        SOVERSION ${FLANN_SOVERSION}
        DEFINE_SYMBOL FLANN_EXPORTS
     )

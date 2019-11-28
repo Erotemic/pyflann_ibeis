@@ -27,6 +27,30 @@
 #import sys
 #import os
 #sys.path.insert(0, os.path.split(__file__)[0]) # make python3 happy
+"""
+mkinit pyflann_ibeis
+"""
 
-from pyflann.index import *
-__version__ = '1.10.0'
+__version__ = '2.00.0'
+
+
+from pyflann_ibeis import exceptions
+from pyflann_ibeis import flann_ctypes
+from pyflann_ibeis import index
+
+from pyflann_ibeis.exceptions import (FLANNException,)
+from pyflann_ibeis.flann_ctypes import (CustomStructure, FLANNParameters,
+                                        FLANN_INDEX, FlannLib, STRING,
+                                        allowed_types, default_flags,
+                                        define_functions, ensure_2d_array,
+                                        flann, flannlib, load_flann_library,
+                                        type_mappings,)
+from pyflann_ibeis.index import (FLANN, index_type, set_distance_type,
+                                 to_bytes,)
+
+__all__ = ['CustomStructure', 'FLANN', 'FLANNException', 'FLANNParameters',
+           'FLANN_INDEX', 'FlannLib', 'STRING', 'allowed_types',
+           'default_flags', 'define_functions', 'ensure_2d_array',
+           'exceptions', 'flann', 'flann_ctypes', 'flannlib', 'index',
+           'index_type', 'load_flann_library', 'set_distance_type', 'to_bytes',
+           'type_mappings']

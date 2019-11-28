@@ -24,11 +24,7 @@
 #(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#from ctypes import *
-#from ctypes.util import find_library
 from numpy import (float32, float64, uint8, int32, require)
-#import ctypes
-#import numpy as np
 from ctypes import (Structure, c_char_p, c_int, c_float, c_uint, c_long,
                     c_void_p, cdll, POINTER)
 from numpy.ctypeslib import ndpointer
@@ -183,7 +179,7 @@ def load_flann_library():
             #print 'Trying',libname
             flannlib = cdll[libname]
             return flannlib
-        except:
+        except Exception:
             pass
 
     return None
@@ -268,7 +264,7 @@ flann.used_memory[%(numpy)s] = flannlib.flann_used_memory_%(C)s
 flann.add_points = {}
 define_functions(r"""
 flannlib.flann_add_points_%(C)s.restype = None
-flannlib.flann_add_points_%(C)s.argtypes = [ 
+flannlib.flann_add_points_%(C)s.argtypes = [
         FLANN_INDEX, # index_id
         ndpointer(%(numpy)s, ndim = 2, flags='aligned, c_contiguous'), # dataset
         c_int, # rows
@@ -281,7 +277,7 @@ flann.add_points[%(numpy)s] = flannlib.flann_add_points_%(C)s
 flann.remove_point = {}
 define_functions(r"""
 flannlib.flann_remove_point_%(C)s.restype = None
-flannlib.flann_remove_point_%(C)s.argtypes = [ 
+flannlib.flann_remove_point_%(C)s.argtypes = [
         FLANN_INDEX, # index_id
         c_uint, # point_id
 ]

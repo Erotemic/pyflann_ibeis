@@ -57,7 +57,7 @@ struct IndexHeader
         memset(h.signature, 0, sizeof(h.signature));
         strcpy(h.signature, FLANN_SIGNATURE_);
         memset(h.version, 0, sizeof(h.version));
-        strcpy(h.version, FLANN_VERSION_);
+        strcpy(h.version, _FLANN_IBEIS_VERSION);
 
         h.compression = 0;
         h.first_block_size = 0;

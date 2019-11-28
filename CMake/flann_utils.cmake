@@ -8,15 +8,17 @@ endmacro(GET_OS_INFO)
 
 macro(DISSECT_VERSION)
     # Find version components
+    message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
     string(REGEX REPLACE "^([0-9]+).*" "\\1"
-        FLANN_VERSION_MAJOR "${FLANN_VERSION}")
+        FLANN_IBEIS_VERSION_MAJOR "${FLANN_IBEIS_VERSION}")
     string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1"
-        FLANN_VERSION_MINOR "${FLANN_VERSION}")
+        FLANN_IBEIS_VERSION_MINOR "${FLANN_IBEIS_VERSION}")
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1"
-        FLANN_VERSION_PATCH ${FLANN_VERSION})
+        FLANN_IBEIS_VERSION_PATCH ${FLANN_IBEIS_VERSION})
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1"
-        FLANN_VERSION_CANDIDATE ${FLANN_VERSION})
-    set(FLANN_SOVERSION "${FLANN_VERSION_MAJOR}.${FLANN_VERSION_MINOR}")
+        FLANN_IBEIS_VERSION_CANDIDATE ${FLANN_IBEIS_VERSION})
+    set(FLANN_SOVERSION "${FLANN_IBEIS_VERSION_MAJOR}.${FLANN_IBEIS_VERSION_MINOR}")
+    message(STATUS "FLANN_SOVERSION = ${FLANN_SOVERSION}")
 endmacro(DISSECT_VERSION)
 
 
@@ -27,7 +29,7 @@ macro(find_hdf5)
     set( HDF5_IS_PARALLEL FALSE )
     foreach( _dir ${HDF5_INCLUDE_DIRS} )
         if( EXISTS "${_dir}/H5pubconf.h" )
-            file( STRINGS "${_dir}/H5pubconf.h" 
+            file( STRINGS "${_dir}/H5pubconf.h"
                 HDF5_HAVE_PARALLEL_DEFINE
                 REGEX "HAVE_PARALLEL 1" )
             if( HDF5_HAVE_PARALLEL_DEFINE )
@@ -106,7 +108,7 @@ endmacro(flann_add_pyunit)
 
 macro(flann_download_test_data _name _md5)
     string(REPLACE "/" "_" _dataset_name dataset_${_name})
-    
+
     add_custom_target(${_dataset_name}
         COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/bin/download_checkmd5.py http://people.cs.ubc.ca/~mariusm/uploads/FLANN/datasets/${_name} ${TEST_OUTPUT_PATH}/${_name} ${_md5}
         VERBATIM)
