@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pyflann import *
+from pyflann_ibeis import *
 from copy import copy
 from numpy import *
 from numpy.random import *
@@ -14,7 +14,7 @@ class Test_PyFLANN_nn(unittest.TestCase):
 
 
 class Test_PyFLANN_nn_index(unittest.TestCase):
-    
+
     def testnn_index(self):
 
         dim = 10
@@ -23,10 +23,10 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
         x   = rand(N, dim)
         nn = FLANN()
         nn.build_index(x)
-        
+
         nnidx, nndist = nn.nn_index(x)
         correct = all(nnidx == arange(N, dtype = index_type))
-                
+
         nn.delete_index()
         self.assertTrue(correct)
 
@@ -40,7 +40,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
         nns = [None]*numtests
         x   = [rand(N, dim) for i in range(numtests)]
         correct = ones(numtests, dtype=bool_)
-        
+
         for i in permutation(numtests):
             nns[i] = FLANN()
             nns[i].build_index(x[i])
@@ -73,7 +73,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
         nn = FLANN()
         nn.build_index(rand(5,5))
         nn.delete_index()
-       
+
         self.assertRaises(FLANNException, lambda: nn.nn_index(rand(5,5)))
 
 

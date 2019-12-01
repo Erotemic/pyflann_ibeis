@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 from os.path import *
-from pyflann import *
+from pyflann_ibeis import *
 from guppy import hpy
 from numpy.random import rand
 
@@ -57,14 +57,14 @@ if __name__ == '__main__':
     print 'Increasing total process memory, relative to the python memory, '
     print 'implies a memory leak in the external libs.'
     print 'Increasing python memory implies a memory leak in the python code.'
-    
+
     h = hpy()
 
     while True:
         s = str(h.heap())
 
         print 'Python: %s;    Process Total: %s' % (s[:s.find('\n')], memory())
-        
+
         X = rand(30000, 2)
         pf = FLANN()
         cl = pf.kmeans(X, 20)
@@ -72,4 +72,4 @@ if __name__ == '__main__':
         del cl
         del pf
         gc.collect()
-        
+

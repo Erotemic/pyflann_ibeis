@@ -2,7 +2,7 @@
 import sys
 from os.path import *
 import os
-from pyflann import *
+from pyflann_ibeis import *
 from copy import copy
 from numpy import *
 from numpy.random import *
@@ -15,7 +15,7 @@ class Test_PyFLANN_nn(unittest.TestCase):
 
     ################################################################################
     # The typical
-    
+
     def test_nn_2d_10pt_kmeans(self):
         self.__nd_random_test(2, 2, algorithm='kdtree')
 
@@ -88,7 +88,7 @@ class Test_PyFLANN_nn(unittest.TestCase):
         seed(0)
         x = array(rand(N, dim), dtype=type)
         perm = permutation(N)
-        
+
         idx,dists = self.nn.nn(x, x[perm], **kwargs)
         self.assertTrue(all(idx == perm))
 
@@ -113,6 +113,6 @@ class Test_PyFLANN_nn(unittest.TestCase):
 
         self.assertTrue(correctness / N >= 0.99,
                      'failed #2: N=%d,correctness=%f' % (N, correctness/N))
-        
+
 if __name__ == '__main__':
     unittest.main()

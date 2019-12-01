@@ -157,13 +157,15 @@ def load_flann_library():
         for libname in libnames:
             try:
                 #print 'Trying ',os.path.join(root_dir,'lib',libname)
-                flannlib = cdll[os.path.join(root_dir, libdir, libname)]
-                return flannlib
+                libpath = os.path.join(root_dir, libdir, libname)
+                flannlib = cdll[libpath]
+                return (flannlib, libpath)
             except Exception:
                 pass
             try:
-                flannlib = cdll[os.path.join(root_dir, 'build', libdir, libname)]
-                return flannlib
+                libpath = os.path.join(root_dir, 'build', libdir, libname)
+                flannlib = cdll[libpath]
+                return (flannlib, libpath)
             except Exception:
                 pass
         tmp = os.path.dirname(root_dir)
@@ -177,14 +179,16 @@ def load_flann_library():
     for libname in libnames:
         try:
             #print 'Trying',libname
-            flannlib = cdll[libname]
+            libpath = libname
+            flannlib = cdll[libpath]
             return flannlib
+            return (flannlib, libpath)
         except Exception:
             pass
 
     return None
 
-flannlib = load_flann_library()
+flannlib, libpath = load_flann_library()
 if flannlib is None:
     raise ImportError('Cannot load dynamic library. Did you compile FLANN?')
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pyflann import *
+from pyflann_ibeis import *
 from copy import copy
 from numpy import *
 from numpy.random import *
@@ -14,7 +14,7 @@ class Test_PyFLANN_nn(unittest.TestCase):
 
 
 class Test_PyFLANN_nn_index(unittest.TestCase):
-    
+
     def testnn_index_save_kdtree_1(self):
         self.run_nn_index_save_perturbed(64,1000, algorithm="kdtree", trees=1)
 
@@ -30,16 +30,16 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
 
     def testnn_index_save_kmeans_16(self):
         self.run_nn_index_save_perturbed(64,1000, algorithm="kmeans", branching=16, iterations=11)
-    
+
     def testnn_index_save_kmeans_32(self):
         self.run_nn_index_save_perturbed(64,1000, algorithm="kmeans", branching=32, iterations=11)
-    
+
     def testnn_index_save_kmeans_64(self):
         self.run_nn_index_save_perturbed(64,1000, algorithm="kmeans", branching=64, iterations=11)
 
 
     def testnn__save_kdtree_1(self):
-        self.run_nn_index_save_rand(64,10000,1000, algorithm="kdtree", trees=1, checks=128)    
+        self.run_nn_index_save_rand(64,10000,1000, algorithm="kdtree", trees=1, checks=128)
 
     def testnn__save_kdtree_4(self):
         self.run_nn_index_save_rand(64,10000,1000, algorithm="kdtree", trees=4, checks=128)
@@ -55,7 +55,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
 
     def testnn__save_kmeans_16(self):
         self.run_nn_index_save_rand(64,10000,1000, algorithm="kmeans", branching=16, iterations=11, checks=40)
-    
+
     def testnn__save_kmeans_32(self):
         self.run_nn_index_save_rand(64,10000,1000, algorithm="kmeans", branching=32, iterations=11, checks=56)
 
@@ -63,7 +63,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
 
 
     def run_nn_index_save_perturbed(self, dim, N, **kwargs):
-        
+
         x = rand(N, dim)
 
         nn = FLANN()
@@ -76,10 +76,10 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
         x_query = x + randn(x.shape[0], x.shape[1])*0.0001/dim
         nnidx, nndist = nn.nn_index(x_query)
         correct = all(nnidx == arange(N, dtype = index_type))
-                
+
         nn.delete_index()
         self.assertTrue(correct)
-    
+
     def run_nn_index_save_rand(self, dim, N, Nq, **kwargs):
 
         x = rand(N, dim)
