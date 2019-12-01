@@ -56,7 +56,7 @@ macro(flann_add_gtest exe)
                     COMMAND ${exe}
                     ARGS --gtest_print_time
                     DEPENDS ${exe}
-                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test
+                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
                     VERBATIM
                     COMMENT "Runnint gtest test(s) ${exe}")
     # add dependency to 'test' target
@@ -76,7 +76,7 @@ macro(flann_add_cuda_gtest exe)
                     COMMAND ${exe}
                     ARGS --gtest_print_time
                     DEPENDS ${exe}
-                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test
+                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
                     VERBATIM
                     COMMENT "Runnint gtest test(s) ${exe}")
     # add dependency to 'test' target
@@ -96,7 +96,7 @@ macro(flann_add_pyunit file)
     add_custom_target(pyunit_${_testname}
                     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/bin/run_test.py ${_file_name}
                     DEPENDS ${_file_name}
-                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test
+                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
                     VERBATIM
                     COMMENT "Running pyunit test(s) ${file}" )
     # add dependency to 'test' target

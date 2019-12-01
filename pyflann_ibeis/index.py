@@ -123,6 +123,9 @@ class FLANN(object):
         Constructor for the class and returns a class that can bind to
         the flann libraries.  Any keyword arguments passed to __init__
         override the global defaults given.
+
+        Args:
+            **kwargs: pass to FlannParameters
         """
 
         self.__rn_gen.seed()
@@ -146,6 +149,15 @@ class FLANN(object):
         """
         Returns the num_neighbors nearest points in dataset for each point
         in testset.
+
+        Args:
+            pts (numpy.ndarray): database vectors
+            qpts (numpy.ndarray): query vectors
+            num_neighbors (int): number of results
+
+        Returns:
+            Tuple[ndarray, ndarray]:
+                result indexes and distances
         """
 
         if pts.dtype.type not in allowed_types:
@@ -195,6 +207,13 @@ class FLANN(object):
         pts is a 2d numpy array or matrix. All the computation is done
         in np.float32 type, but pts may be any type that is convertable
         to np.float32.
+
+        Args:
+            pts (ndarray): database vectors
+
+        # Broken with my xdev mypy hack
+        # Returns:
+        #     pyflann_ibeis.flann_ctypes.FLANNParameters:
         """
 
         if pts.dtype.type not in allowed_types:
@@ -226,6 +245,9 @@ class FLANN(object):
     def save_index(self, filename):
         """
         This saves the index to a disk file.
+
+        Args:
+            filename (PathLike): path to save the index to
         """
         if self.__curindex is not None:
             flann.save_index[self.__curindex_type](
@@ -234,6 +256,10 @@ class FLANN(object):
     def load_index(self, filename, pts):
         """
         Loads an index previously saved to disk.
+
+        Args:
+            filename (PathLike): path to load the index from
+            pts (ndarray): data associated with the index
         """
 
         if pts.dtype.type not in allowed_types:
@@ -268,6 +294,9 @@ class FLANN(object):
     def used_memory(self):
         """
         Returns the number of bytes consumed by the index.
+
+        Returns:
+            int:
         """
         return flann.used_memory[self.__curindex_type](self.__curindex)
 
@@ -275,12 +304,12 @@ class FLANN(object):
         """
         Adds points to pre-built index.
 
-        Params:
-            pts: 2D numpy array of points.
-            rebuild_threshold: reallocs index when it grows by factor of
-                `rebuild_threshold`. A smaller value results is more space
-                efficient but less computationally efficient. Must be greater
-                than 1.
+        Args:
+            pts (ndarray): 2D numpy array of points.
+            rebuild_threshold (float):
+                reallocs index when it grows by factor of `rebuild_threshold`.
+                A smaller value results is more space efficient but less
+                computationally efficient. Must be greater than 1.
         """
         if pts.dtype.type not in allowed_types:
             raise FLANNException("Cannot handle type: %s" % pts.dtype)
@@ -294,6 +323,9 @@ class FLANN(object):
     def remove_point(self, idx):
         """
         Removes a point from a pre-built index.
+
+        Args:
+            idx (int): index of point to remove
         """
         flann.remove_point[self.__curindex_type](self.__curindex, idx)
         # Not sure if this is ok:
@@ -305,6 +337,10 @@ class FLANN(object):
         For each point in querypts, (which may be a single point), it
         returns the num_neighbors nearest points in the index built by
         calling build_index.
+
+        Args:
+            qpts (ndarray): 2D numpy array of query points.
+            num_neighbors (int): number of results
         """
 
         if self.__curindex is None:
@@ -348,6 +384,12 @@ class FLANN(object):
             return (result, dists)
 
     def nn_radius(self, query, radius, **kwargs):
+        """
+        Args:
+            query (ndarray): query point
+            radius (float): search distance
+            **kwargs: extra flann params
+        """
 
         if self.__curindex is None:
             raise FLANNException(
@@ -381,6 +423,9 @@ class FLANN(object):
         """
         Deletes the current index freeing all the momory it uses.
         The memory used by the dataset that was indexed is not freed.
+
+        Args:
+            **kwargs: extra flann params
         """
 
         self.__flann_parameters.update(kwargs)
@@ -409,6 +454,12 @@ class FLANN(object):
         If dtype is None (the default), the array returned is the same
         type as pts.  Otherwise, the returned array is of type dtype.
 
+        Args:
+            pts (numpy.ndarray): vectors to cluster
+            num_clusters (int): the k in kmeans
+            max_iterations (int | None):
+            dtype (type | None):
+            **kwargs: extra flann params
         """
 
         if int(num_clusters) != num_clusters or num_clusters < 1:
@@ -439,6 +490,13 @@ class FLANN(object):
         If dtype is None (the default), the array returned is the same
         type as pts.  Otherwise, the returned array is of type dtype.
 
+        Args:
+            pts (numpy.ndarray): vectors to cluster
+            branch_size (int):
+            num_branches (int):
+            max_iterations (int | None):
+            dtype (type | None):
+            **kwargs: extra flann params
         """
 
         # First verify the paremeters are sensible.
@@ -505,14 +563,27 @@ class FLANN(object):
 
     @property
     def shape(self):
+        """
+        Returns:
+            Tuple:
+        """
         return self.get_indexed_shape()
 
     @property
     def __len__(self):
+        """
+        Returns:
+            int:
+        """
         return self.shape[0]
 
     def get_indexed_shape(self):
-        """ returns the shape of the data being indexed """
+        """
+        returns the shape of the data being indexed
+
+        Returns:
+            Tuple[int, int]:
+        """
         npts, dim = self.__curindex_data.shape
         for _extra in self.__added_data:
             npts += _extra.shape[0]
@@ -524,12 +595,18 @@ class FLANN(object):
         returns all the data indexed by the FLANN object
 
         (this returns points that have been removed but still exist in memory)
+
+        Returns:
+            Tuple[ndarray, ndarray]:
         """
         return self.__curindex_data, self.__added_data
 
     def used_memory_dataset(self):
         """
         Returns the amount of memory used by the dataset
+
+        Returns:
+            int:
         """
         if self.__curindex_data is None:
             return 0
@@ -542,10 +619,8 @@ class FLANN(object):
         """
         Removes multiple points from the index
 
-        Params:
-            idxs = point ids to be removed
-
-        Returns: void
+        Args:
+            idxs (List[int]): point ids to be removed
         """
         for idx in idxs:
             flann.remove_point[self.__curindex_type](self.__curindex, idx)

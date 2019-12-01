@@ -1,4 +1,18 @@
 #!/usr/bin/env python
+r"""
+
+
+Build Wheels:
+    pip install cibuildwheel
+
+    CIBW_BUILD_VERBOSITY=1 \
+    CIBW_TEST_REQUIRES="-r requirements/tests.txt" \
+    CIBW_TEST_COMMAND='python {project}/run_tests.py' \
+    CIBW_SKIP='pp*' \
+        cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
+
+
+"""
 from __future__ import absolute_import, division, print_function
 import sys
 from os.path import exists
@@ -196,6 +210,7 @@ KWARGS = OrderedDict(
     # The combination of packages and package_dir is how scikit-build will
     # know that the cmake installed files belong in the pyflann module and
     # not the data directory.
+
     packages=[
         'pyflann_ibeis',
         # These are generated modules that will be created via build
@@ -207,9 +222,14 @@ KWARGS = OrderedDict(
         # in the src/cpp/CMakeLists.txt
         'pyflann_ibeis.lib': 'pyflann_ibeis/lib',
     },
+    package_data={
+        'pyflann_ibeis': ['py.typed', '*.pyi'],
+    },
+
     include_package_data=False,
     # List of classifiers available at:
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    python_requires='>=3.6',
     classifiers=[
         'Development Status :: 6 - Mature',
         'License :: OSI Approved :: BSD License',
@@ -218,11 +238,11 @@ KWARGS = OrderedDict(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Image Recognition'
     ],

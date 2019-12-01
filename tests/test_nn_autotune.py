@@ -72,6 +72,6 @@ class Test_PyFLANN_nn(unittest.TestCase):
 
 if __name__ == '__main__':
     """
-    pytest ~/code/flann/test/test_nn_autotune.py
+    pytest ~/code/flann/tests/test_nn_autotune.py
     """
     unittest.main()

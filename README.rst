@@ -1,4 +1,6 @@
-|ReadTheDocs| |Pypi| |Downloads| |Codecov| |CircleCI| |Travis| |Appveyor| 
+|GithubActions| |ReadTheDocs| |Pypi| |Downloads| |Codecov| 
+
+..|CircleCI||Travis||Appveyor| 
 
 
 This is a Fork of the FLANN repo, under a different name for use in the IBEIS
@@ -58,4 +60,5 @@ Please report bugs or feature requests using [github's issue tracker](http://git
    :target: https://pypistats.org/packages/pyflann_ibeis
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/pyflann_ibeis/badge/?version=latest
     :target: http://pyflann_ibeis.readthedocs.io/en/latest/
-
+.. |GithubActions| image:: https://github.com/Erotemic/pyflann_ibeis/actions/workflows/tests.yml/badge.svg?branch=main
+    :target: https://github.com/Erotemic/pyflann_ibeis/actions?query=branch%3Amain

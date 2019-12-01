@@ -1,9 +1,15 @@
 add_custom_target(examples ALL)
 
 
+#set(SPECIAL_PRE_FLAGS "-Wl,--push-state,--no-as-needed")
+#set(SPECIAL_POST_FLAGS "-Wl,--pop-state")
+set(SPECIAL_PRE_FLAGS "")
+set(SPECIAL_POST_FLAGS "")
+
+
 if (BUILD_C_BINDINGS)
     add_executable(flann_example_c flann_example.c)
-    target_link_libraries(flann_example_c -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+    target_link_libraries(flann_example_c  ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
     target_link_libraries(flann_example_c flann)
     set_target_properties(flann_example_c PROPERTIES COMPILE_FLAGS -std=c99)
 
@@ -15,7 +21,7 @@ if (HDF5_FOUND)
     include_directories(${HDF5_INCLUDE_DIR})
 
     add_executable(flann_example_cpp flann_example.cpp)
-    target_link_libraries(flann_example_cpp -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+    target_link_libraries(flann_example_cpp  ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
     target_link_libraries(flann_example_cpp ${HDF5_LIBRARIES} flann_cpp)
     if (HDF5_IS_PARALLEL)
         target_link_libraries(flann_example_cpp ${MPI_LIBRARIES})
@@ -27,7 +33,7 @@ if (HDF5_FOUND)
 
     if (USE_MPI AND HDF5_IS_PARALLEL)
         add_executable(flann_example_mpi flann_example_mpi.cpp)
-        target_link_libraries(flann_example_mpi -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+        target_link_libraries(flann_example_mpi  ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
         target_link_libraries(flann_example_mpi flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
 
         add_dependencies(examples flann_example_mpi)
