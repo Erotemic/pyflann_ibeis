@@ -73,6 +73,9 @@ def to_bytes(string):
 class FLANN(object):
     """
     This class defines a python interface to the FLANN lirary.
+
+    Example:
+        >>> flann = FLANN()
     """
     __rn_gen = _rn.RandomState()
 
@@ -211,14 +214,14 @@ class FLANN(object):
             c_char_p(to_bytes(filename)), pts, npts, dim)
         self.__curindex_data = pts
         self.__curindex_type = pts.dtype.type
-        
-        
+
+
     def used_memory(self):
         """
         Returns the number of bytes consumed by the index.
         """
         return flann.used_memory[self.__curindex_type](self.__curindex)
-        
+
     def add_points(self, pts, rebuild_threshold=2.0):
         """
         Adds points to pre-built index.
@@ -228,18 +231,18 @@ class FLANN(object):
             rebuild_threshold: reallocs index when it grows by factor of \
                 `rebuild_threshold`. A smaller value results is more space \
                 efficient but less computationally efficient. Must be greater \
-                than 1.           
+                than 1.
         """
         if not pts.dtype.type in allowed_types:
             raise FLANNException("Cannot handle type: %s"%pts.dtype)
-        pts = ensure_2d_array(pts,default_flags) 
+        pts = ensure_2d_array(pts,default_flags)
         npts, dim = pts.shape
         flann.add_points[self.__curindex_type](self.__curindex, pts, npts, dim, rebuild_threshold)
         self.__curindex_data = np.row_stack((self.__curindex_data,pts))
-        
+
     def remove_point(self, idx):
         """
-        Removes a point from a pre-built index.         
+        Removes a point from a pre-built index.
         """
         flann.remove_point[self.__curindex_type](self.__curindex, idx)
         self.__curindex_data = np.delete(self.__curindex_data,idx,axis=0)
@@ -441,3 +444,42 @@ class FLANN(object):
     def __ensureRandomSeed(self, kwargs):
         if 'random_seed' not in kwargs:
             kwargs['random_seed'] = self.__rn_gen.randint(2 ** 30)
+
+
+    ####
+    # From the IBEIS fork
+
+    @property
+    def shape(self):
+        return self.get_indexed_shape()
+
+    @property
+    def __len__(self):
+        return self.shape[0]
+
+    def get_indexed_shape(self):
+        """ returns the shape of the data being indexed """
+        npts, dim = self.__curindex_data.shape
+        for _extra in self.__added_data:
+            npts += _extra.shape[0]
+        npts -= len(self.__removed_ids)
+        return npts, dim
+
+    def get_indexed_data(self):
+        """
+        returns all the data indexed by the FLANN object
+
+        (this returns points that have been removed but still exist in memory)
+        """
+        return self.__curindex_data, self.__added_data
+
+    def used_memory_dataset(self):
+        """
+        Returns the amount of memory used by the dataset
+        """
+        if self.__curindex_data is None:
+            return 0
+        num_bytes = self.__curindex_data.nbytes
+        for _extra in self.__added_data:
+            num_bytes += _extra.nbytes
+        return num_bytes
