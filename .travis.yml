@@ -1,4 +1,3 @@
-dist: trusty
 
 env:
     global:
@@ -6,11 +5,10 @@ env:
 
          - secure: "ck00CVVDoaAhpz8sGESB8kIjN14V3m8l05BJFJULXWnFQ3VI74CEeGlLsvAGlSqABnI+KavDx+mjJvzF0OOzV/VQN+wpRnhEe2XSIAyVRGudJ60LMyH1ld8N2jdS/0LDajx4Gecj7PvC9s3aWH6Ag0dwg/Q9HlA2Twzi7P7irn6hBq30FRfVKGLpiVoGhygeGoKlr74LBjx3kVNEHF1giq4t5rw9kF5M6wx3YET4put9oWa90TXvFHPpWcU+TwPBOAKlF1yqoqKFsPuKdLM9mB7g41Lce3scOyr198HKeASTbkge5/MIdOEhzDWZzJTHWpq+mDzNC5bPhUT6rW2aBEP7rX+JDrj99AkWm33PihvIGKyuWqguiBWEEv2g08wRLol4JA++0xQC33GXj5kY8U3XKp/QB57MSRb+ZVm+E0F+XI7qtY9R1oF/ljK6SsMXYhlNlyXH8a6wXKDAt3XAR0HykyewNbJNMQigDQKeKeq3Sn7YC/MT7XlQR85jZJZF7SU8+wGEE0xMTHr2ulz2c2tNOeP/2pB+tZUHy83rsTOn/We4MhZ1X4Ddg3ZqLCYdUp6ql0lDwvfW9a+lXD4i1XzpY1+FndikojaLOOLO1qzviol2LKgp0fL+94jqixE5e/T0FNaI6NnoWdX9g6elmXo/DQ2bTL1w2ActqVs5jlo="
              
-
         - secure: "AuKguxX6EPgYw1AsGsaVCdTXxDtsVjgP4GTElwfoS+L3biMoSMkYI+99fC0fyWH7u698mbWjiPZ6ndxx85OS8WrJ5XJqCzbVo1ZAClNhdw2zxisndb4U51mrzxvKG7AxPwskegMYwzaO9EJ1NI/0Cg2T+86PIN2Gfhm3PP0TrQDRST1z80kUO8/eiGxBW0TnPEAMOVwndjF+MCNSKuFngFPwavjcjKH50877a2My7MLHyuMo4DM5w/oGfHFoum0cbcDotJrpgH7fFKIMTMmS+P6YmDw/eIeO3NFwqBtPkvyVk6+WsMoEfTIbvwowGJJucOzDEDPQGyDulm6bj3nQn1gb5EuekUdEKVt0M2sowqrCQBb5X0Xqmhfv8xIm1Xo/fNbM6Srw+2FT4xx3gdXTMBxx7zBDc8ZksR8kfcK1Yt8vpbKTGDbZKvDc8kw2VooA0Ok4rx6vYbPrsHnh8ZAaJ33lAvoyUTL6aAH0IAj3jTZ2lAwMDPQO04HxTDbe0vq0GvirNhBf9v88uC/8BYN1wUfrFHxwxJrX7VJNvvwcIYp2Tlqlu2pL8TVI1OQ8KvyTHaKqIK7tyFTs+3S9bhqvnsl7u5N3bm4haQQNFGrN+rU3oN3keecqvx6IvT+haxmSM/TKSVpMiIZmGrU9XLxvnUktAWiKemUgvS8WdGS7VeI="
-
   
 
+dist: trusty
 language: python
 sudo: false
 
@@ -67,9 +65,9 @@ after_success:
         gpg --export-ownertrust > dev/gpg_owner_trust
 
         # Encrypt gpg keys and trust with travis secret
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/travis_public_gpg_key.pgp > dev/travis_public_gpg_key.pgp.enc
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/travis_secret_gpg_key.pgp > dev/travis_secret_gpg_key.pgp.enc
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/gpg_owner_trust > dev/gpg_owner_trust.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/travis_public_gpg_key.pgp > dev/travis_public_gpg_key.pgp.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/travis_secret_gpg_key.pgp > dev/travis_secret_gpg_key.pgp.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/gpg_owner_trust > dev/gpg_owner_trust.enc
 
         source $(secret_unloader.sh)
 
