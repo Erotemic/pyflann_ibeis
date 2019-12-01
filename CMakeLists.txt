@@ -178,8 +178,8 @@ set(namespace "flann::")
 
 if (SKBUILD)
   # Override output paths when using scikit-build
-  set(FLANN_LIB_INSTALL_DIR "pyflann/lib")
-  set(FLANN_INCLUDE_INSTALL_DIR "pyflann/include")
+  set(FLANN_LIB_INSTALL_DIR "pyflann_ibeis/lib")
+  set(FLANN_INCLUDE_INSTALL_DIR "pyflann_ibeis/include")
 endif()
 
 if (NOT SKBUILD)

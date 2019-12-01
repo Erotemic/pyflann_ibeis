@@ -1,28 +1,28 @@
-#Copyright 2008-2010  Marius Muja (mariusm@cs.ubc.ca). All rights reserved.
-#Copyright 2008-2010  David G. Lowe (lowe@cs.ubc.ca). All rights reserved.
+# Copyright 2008-2010  Marius Muja (mariusm@cs.ubc.ca). All rights reserved.
+# Copyright 2008-2010  David G. Lowe (lowe@cs.ubc.ca). All rights reserved.
 #
-#THE BSD LICENSE
+# THE BSD LICENSE
 #
-#Redistribution and use in source and binary forms, with or without
-#modification, are permitted provided that the following conditions
-#are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 #
-#1. Redistributions of source code must retain the above copyright
+# 1. Redistributions of source code must retain the above copyright
 #   notice, this list of conditions and the following disclaimer.
-#2. Redistributions in binary form must reproduce the above copyright
+# 2. Redistributions in binary form must reproduce the above copyright
 #   notice, this list of conditions and the following disclaimer in the
 #   documentation and/or other materials provided with the distribution.
 #
-#THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-#IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-#OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-#IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-#INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-#NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-#DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-#THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-#(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-#THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #from pyflann.flann_ctypes import *  # NOQA
 import sys
@@ -75,7 +75,43 @@ class FLANN(object):
     This class defines a python interface to the FLANN lirary.
 
     Example:
+        >>> from pyflann_ibeis import FLANN
+        >>> import numpy as np
+        >>> dvecs = np.random.rand(1000, 128)
+        >>> qvecs = np.random.rand(10, 128)
         >>> flann = FLANN()
+        >>> params = flann.build_index(dvecs)
+        >>> # xdoctest: +IGNORE_WANT
+        >>> qx_to_dx, qx_to_dist = flann.nn_index(qvecs, num_neighbors=5)
+        >>> print('qx_to_dist = {!r}'.format(qx_to_dist))
+        >>> print('qx_to_dx = {!r}'.format(qx_to_dx))
+        qx_to_dist = array([[16.6, 16.74, 18.055, 18.12, 18.4],
+                            [16.2, 16.96, 17.204, 18.50, 18.6],
+                            [14.2, 15.91, 15.961, 16.76, 16.8],
+                            [18.0, 18.09, 18.389, 18.62, 18.8],
+                            [16.0, 17.32, 19.177, 19.17, 19.3],
+                            [17.1, 17.83, 17.941, 18.32, 18.5],
+                            [17.0, 17.80, 17.888, 18.32, 18.5],
+                            [17.6, 17.72, 17.852, 17.93, 18.1],
+                            [15.6, 15.66, 16.117, 16.49, 17.0],
+                            [14.3, 15.88, 16.186, 16.74, 17.2]])
+        qx_to_dx = array([[113, 150, 122, 956, 444],
+                          [469, 308, 363, 229, 613],
+                          [591, 564, 153,   0, 396],
+                          [954, 800, 515, 460, 114],
+                          [107, 266, 698, 708, 451],
+                          [ 38,  86, 404, 579, 517],
+                          [942, 631,  10, 561, 230],
+                          [152, 691, 582, 153, 840],
+                          [700, 543, 582, 971, 826],
+                          [  8, 843, 670, 853,  79]], dtype=int32)
+        >>> print('flann.shape = {!r}'.format(flann.shape))
+        flann.shape = (1000, 128)
+        >>> flann.remove_points(np.unique(qx_to_dx.ravel()))
+        >>> qx_to_dx2, qx_to_dist2 = flann.nn_index(qvecs, num_neighbors=5)
+        >>> assert len(set(qx_to_dx2.ravel()) & set(qx_to_dx.ravel())) == 0
+        >>> flann.add_points(dvecs + 1)
+
     """
     __rn_gen = _rn.RandomState()
 
@@ -93,6 +129,8 @@ class FLANN(object):
         self.__curindex = None
         self.__curindex_data = None
         self.__curindex_type = None
+        self.__added_data = []  # contained to keep any added numpy data alive
+        self.__removed_ids = []  # contains the point ids that have been removed
 
         self.__flann_parameters = FLANNParameters()
         self.__flann_parameters.update(kwargs)
@@ -209,12 +247,22 @@ class FLANN(object):
             self.__curindex = None
             self.__curindex_data = None
             self.__curindex_type = None
+            self.__added_data = []
+            self.__removed_ids = []
 
         self.__curindex = flann.load_index[pts.dtype.type](
             c_char_p(to_bytes(filename)), pts, npts, dim)
+
+        if self.__curindex is None:
+            raise FLANNException(
+                ('Error loading the FLANN index with filename=%r.'
+                 ' C++ may have thrown more detailed errors') % (filename,))
+
         self.__curindex_data = pts
         self.__curindex_type = pts.dtype.type
-
+        self.__added_data = []
+        self.__removed_ids = []
+        self.__removed_ids = []
 
     def used_memory(self):
         """
@@ -227,25 +275,29 @@ class FLANN(object):
         Adds points to pre-built index.
 
         Params:
-            pts: 2D numpy array of points.\n
-            rebuild_threshold: reallocs index when it grows by factor of \
-                `rebuild_threshold`. A smaller value results is more space \
-                efficient but less computationally efficient. Must be greater \
+            pts: 2D numpy array of points.
+            rebuild_threshold: reallocs index when it grows by factor of
+                `rebuild_threshold`. A smaller value results is more space
+                efficient but less computationally efficient. Must be greater
                 than 1.
         """
-        if not pts.dtype.type in allowed_types:
-            raise FLANNException("Cannot handle type: %s"%pts.dtype)
-        pts = ensure_2d_array(pts,default_flags)
+        if pts.dtype.type not in allowed_types:
+            raise FLANNException("Cannot handle type: %s" % pts.dtype)
+        pts = ensure_2d_array(pts, default_flags)
         npts, dim = pts.shape
-        flann.add_points[self.__curindex_type](self.__curindex, pts, npts, dim, rebuild_threshold)
-        self.__curindex_data = np.row_stack((self.__curindex_data,pts))
+        flann.add_points[self.__curindex_type](
+            self.__curindex, pts, npts, dim, rebuild_threshold)
+        self.__curindex_data = np.row_stack((self.__curindex_data, pts))
+        self.__added_data.append(pts)
 
     def remove_point(self, idx):
         """
         Removes a point from a pre-built index.
         """
         flann.remove_point[self.__curindex_type](self.__curindex, idx)
-        self.__curindex_data = np.delete(self.__curindex_data,idx,axis=0)
+        # Not sure if this is ok:
+        self.__curindex_data = np.delete(self.__curindex_data, idx, axis=0)
+        self.__removed_ids.append(idx)
 
     def nn_index(self, qpts, num_neighbors=1, **kwargs):
         """
@@ -337,6 +389,8 @@ class FLANN(object):
                 self.__curindex, pointer(self.__flann_parameters))
             self.__curindex = None
             self.__curindex_data = None
+            self.__added_data = []
+            self.__removed_ids = []
 
     ##########################################################################
     # Clustering functions
@@ -445,7 +499,6 @@ class FLANN(object):
         if 'random_seed' not in kwargs:
             kwargs['random_seed'] = self.__rn_gen.randint(2 ** 30)
 
-
     ####
     # From the IBEIS fork
 
@@ -483,3 +536,15 @@ class FLANN(object):
         for _extra in self.__added_data:
             num_bytes += _extra.nbytes
         return num_bytes
+
+    def remove_points(self, idxs):
+        """
+        Removes multiple points from the index
+
+        Params:
+            idxs = point ids to be removed
+
+        Returns: void
+        """
+        for idx in idxs:
+            flann.remove_point[self.__curindex_type](self.__curindex, idx)

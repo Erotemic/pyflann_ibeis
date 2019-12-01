@@ -1,5 +1,6 @@
 This is a Fork of the FLANN repo, under a different name for use in the IBEIS
-project.
+project. The main difference is that it has a few more helper function calls
+and it should be easier build wheels and to pip install.
 
 
 FLANN - Fast Library for Approximate Nearest Neighbors

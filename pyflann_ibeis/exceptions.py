@@ -27,6 +27,7 @@
 
 # This module defines exceptions that are used by the flann python bindings
 
-class FLANNException(Exception):
-    def __init__(self, *args):
-        Exception.__init__(self, *args)
+class FLANNException(Exception):  # nocover
+    pass
+    # def __init__(self, *args):
+    #     Exception.__init__(self, *args)
