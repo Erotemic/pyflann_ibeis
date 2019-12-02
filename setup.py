@@ -14,7 +14,14 @@ def native_mb_python_tag():
     if platform.python_implementation() == 'CPython':
         # TODO: get if cp27m or cp27mu
         impl = 'cp'
-        abi = 'm'
+        if ver == '27':
+            IS_27_BUILT_WITH_UNICODE = True  # how to determine this?
+            if IS_27_BUILT_WITH_UNICODE:
+                abi = 'mu'
+            else:
+                abi = 'm'
+        else:
+            abi = 'm'
     else:
         raise NotImplementedError(impl)
     mb_tag = '{impl}{ver}-{impl}{ver}{abi}'.format(**locals())

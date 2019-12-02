@@ -1,12 +1,12 @@
 
 env:
     global:
-        - secure: "Ooa5nLxisYKx+vf8dDj9rQPP+cUdO3DIa09qD+mk/ElWE9ZQLWm+2tskF8WPlKmhomyNfkCn4+z0wDVRFPoCqM+46sccJwrufEiVL7Ep8mccPf0GX+kpjfrdbO8JAC4gFMB69VtnbPbYfzYvajiB30Wg+miJbxlSRUozG9ybCBiElXNW3hzoFvljSBFy3rkn61oQYqpo5XYOtdP6WoNNJkGGfMqxN+mFqxCTwtc5IcIs6YFXItjHe4BE5AIs0kBsoqcX/OIzFNrZ+gUgZl9aBx5NoBER2RxIZy3QLpgvk8Z1bSNxaGciHjrkIKaxGDYNa1UdPW6+UFaUc34rBXAmsiPsoX6An3Ffybbb5YlbN+85YpMpFqJAbGgmTt0ZaqbOXc6lNxxcQleuezcPGtDiiIwrYZGmDV5V8RCHoqAGV7hPowIV+fB71MyC/eVhcwDV+EFcOU8YmCrAed+un/BA++e//9UIOcCPI4U80Iqv/dD3V9saMh7riNeEka9vaMh5jHHAtOlrVHEV+S7ed/bVflKgTRjYw/b0+GZp3mTur+2t2fxYk2yYJ51vFt3StsBh3x2kKYsUd26G2qZYQLcUgehF37qi2pzBmiio5oY3eJCnc9mK9uyST6BxpYz8nARudmlTHqfRumTCPz2H4Z3zDmcRs2BjfwHBnyFxXnrpPMo="
+        - secure: "dhtcnIFPpCgaRucwv/Y8IKZcEb1C0tS83W6Z9hu/xD4eKo5dlhThiniLiUL/swxABc5flWTmASAZSi4GEZgz5cNIvZ3ZZ78WQr4zvB7FpdvhdOWu3LVt9ANvnEzl1LHZxhLMjGcJeJfYEJv85pqZ/6ySx0pXG1JFDcbbhBItYL3Upb88GPHygxn68lUM4cVLKqXWLMBGUSWaYJuv61NEcibdStntQRBzaHY6firNaj+1zqVLqSoE8GoV1T2CEuI9qaoIGtNphOggfROzfq3w7YXaE8Uq8pK/0lD+nGdIDW62/dmQnFDoSFWRcTjUvLc3WstSLdIzRjHPdY/wRtoLk7mUsqAzHQ0oIY2aTQ9bYCIfblnJxpHYwksP4GhWzEqoDa4rJnQyMr0+oEGQiya+AFUAGJxTqJMO8LNGBDUasB3qhRi9Tu0i5eVEzpewhRRPXbZ1PvqRTmg98wqyvYr874+xqw9Nn9IbT+fFgK6+inBoaKv8k2zUZX/4YYtdKyZu7RBwEDsFKibsUMBqz9AquAcqYGPK+//vDR7A4N+buzOG6JLzgsxSPnHpG8QAOAS9kUKSGhtdJjmNx3lvjDxLvpBuSKSczsHxBljO3XewaviKAKD+POIG1eCsj8B8NdwupPJpev4o3h+gH/1PO5AzTpVtFhrUZYyG1KqDmn23iNA="
 
-        - secure: "ck00CVVDoaAhpz8sGESB8kIjN14V3m8l05BJFJULXWnFQ3VI74CEeGlLsvAGlSqABnI+KavDx+mjJvzF0OOzV/VQN+wpRnhEe2XSIAyVRGudJ60LMyH1ld8N2jdS/0LDajx4Gecj7PvC9s3aWH6Ag0dwg/Q9HlA2Twzi7P7irn6hBq30FRfVKGLpiVoGhygeGoKlr74LBjx3kVNEHF1giq4t5rw9kF5M6wx3YET4put9oWa90TXvFHPpWcU+TwPBOAKlF1yqoqKFsPuKdLM9mB7g41Lce3scOyr198HKeASTbkge5/MIdOEhzDWZzJTHWpq+mDzNC5bPhUT6rW2aBEP7rX+JDrj99AkWm33PihvIGKyuWqguiBWEEv2g08wRLol4JA++0xQC33GXj5kY8U3XKp/QB57MSRb+ZVm+E0F+XI7qtY9R1oF/ljK6SsMXYhlNlyXH8a6wXKDAt3XAR0HykyewNbJNMQigDQKeKeq3Sn7YC/MT7XlQR85jZJZF7SU8+wGEE0xMTHr2ulz2c2tNOeP/2pB+tZUHy83rsTOn/We4MhZ1X4Ddg3ZqLCYdUp6ql0lDwvfW9a+lXD4i1XzpY1+FndikojaLOOLO1qzviol2LKgp0fL+94jqixE5e/T0FNaI6NnoWdX9g6elmXo/DQ2bTL1w2ActqVs5jlo="
+        - secure: "PDxqRpNhaOr2a+morKTM3+vk5614vTuY9lZ7ZpZUOFqNiolFVjLD2tYEUH2iZibRN2ciyB7EQULnfsvsTXlO0uftPVfuSrGKOQPZzBQmzTihwqoOQJJZnLRk/pqnbZUzUtjnTM3Nccv1TY1BYmqN+KNRZvTL+trdeM5yYGLXLizJ0Z44J/6Vk4y8spGwlZ7mShsUiPbMDTF37qsWdZtNIJZFUCdDeDdLwY1LzseVXjMMg6AwsCd2ddtKnHxN+vnXjycFuhoBGjkt0CxZE6Ksb9FvlsjT8dZd11a4W4cr3suvhHDRh9ScRWjZnghuP2ai7GuC7TXnfLsSw722Drmzw8/Bg9+SxvgcqsJJ49c33cMGMLf5WbJdK4SMfji0OchmTKrDlWWERYsjxg6bu/O4STnF87OplnCeKL7tcGxvXazC8WIqqLxY//nlaFoEQZ3Cy8JF8KEwUk48CSbajSrORIXnZsIFPRG8I+xHvbc+EkJqnhLg5T0M+wEMpleSxdUV10h9I6FIBPiSu3prKEdi6gBp0uNMevn419n6C8QnlkH0vuBQDXj/6jgUfJgaZnsX2sNiAn9ahExFz1SUGUVgN/XWzddajOaXvetpUpReKboZ+Pqq54CCNENXhdVqJ02XwI/aiVp+Wx+iLQkVlpJKC28F57dY+0oH3Su34R12ztY="
 
-        - secure: "AuKguxX6EPgYw1AsGsaVCdTXxDtsVjgP4GTElwfoS+L3biMoSMkYI+99fC0fyWH7u698mbWjiPZ6ndxx85OS8WrJ5XJqCzbVo1ZAClNhdw2zxisndb4U51mrzxvKG7AxPwskegMYwzaO9EJ1NI/0Cg2T+86PIN2Gfhm3PP0TrQDRST1z80kUO8/eiGxBW0TnPEAMOVwndjF+MCNSKuFngFPwavjcjKH50877a2My7MLHyuMo4DM5w/oGfHFoum0cbcDotJrpgH7fFKIMTMmS+P6YmDw/eIeO3NFwqBtPkvyVk6+WsMoEfTIbvwowGJJucOzDEDPQGyDulm6bj3nQn1gb5EuekUdEKVt0M2sowqrCQBb5X0Xqmhfv8xIm1Xo/fNbM6Srw+2FT4xx3gdXTMBxx7zBDc8ZksR8kfcK1Yt8vpbKTGDbZKvDc8kw2VooA0Ok4rx6vYbPrsHnh8ZAaJ33lAvoyUTL6aAH0IAj3jTZ2lAwMDPQO04HxTDbe0vq0GvirNhBf9v88uC/8BYN1wUfrFHxwxJrX7VJNvvwcIYp2Tlqlu2pL8TVI1OQ8KvyTHaKqIK7tyFTs+3S9bhqvnsl7u5N3bm4haQQNFGrN+rU3oN3keecqvx6IvT+haxmSM/TKSVpMiIZmGrU9XLxvnUktAWiKemUgvS8WdGS7VeI="
-  
+        - secure: "ObkWOsIH7D4ZjhflwlVWdE0sZslaEHzkp/DiUYycaCwdeAsw8Nlt2zFdKGf46M5vSvciamuHRQkgi5puNxX+S6oRHtYBkFFXT7lJ+i4mE+xi/6pKrBYwfTCioeb1xWoDNBNN9al/cveLDJ1VR4xapu7A060DEDLzx09+K/geWfrjilCI5iW3jvTtd1dUj1/jdzF5CR63ly79qZrTP0WGJf04rdZuEUYwlVfABgxpa/wu6ZaoMm8DS1+t/RGC1MfUfyV/HIhHD95sOM9nB5I7onjiTn+xZgJLUxfKtpzSGN6Ff5Wx8psxyO/QohsiugUt/bKZ9BiaRsDe0nKL83jPGG8j22rpXnwTFZ9iZ3CvEI/0uub0RecOdFLDro3IQ5YlJjmdbzCUT03KqqJcTZzVZUEWIjTCdb6VtiQbqIXEs4BVnxOTa9Hm9lJxDR2topgfrzgKSo4ZBQ/L/NuK3O1+S/2ldBJSG7SPT0vEniIShCexaP38/blqeU5BmSL8LrEv/Mb0FrDnTRKKCCGGW+1xPi7bmqVWKkqeMaESsNEJJx2IXUQ/nkvh2CmPV7RFl4Udgb1xlNKCBP3TuVhhMG/PPC+Csh53dqDFI2VwIrC0xYuPWgWVkyAcEJwd+LCzg+HqljXMmEe1uVN6ss6fdiAvwo278Cu/EMx6J9hNwijLdts="
+
 
 dist: trusty
 language: python
@@ -48,14 +48,14 @@ after_success:
         __heredoc__='''
         # Load or generate secrets
         source $(secret_loader.sh)
-        echo $CI_GITHUB_SECRET
         echo $TWINE_USERNAME
         echo $TWINE_PASSWORD
+        echo $CI_GITHUB_SECRET
 
         # encrypt relevant travis variables
-        travis encrypt CI_GITHUB_SECRET=$CI_GITHUB_SECRET
-        travis encrypt TWINE_PASSWORD=$TWINE_PASSWORD  
         travis encrypt TWINE_USERNAME=$TWINE_USERNAME 
+        travis encrypt TWINE_PASSWORD=$TWINE_PASSWORD  
+        travis encrypt CI_GITHUB_SECRET=$CI_GITHUB_SECRET
 
         # HOW TO ENCRYPT YOUR SECRET GPG KEY
         IDENTIFIER="travis-ci-Erotemic"
@@ -93,9 +93,9 @@ after_success:
     - $GPG_EXECUTABLE --version
     - openssl version
     - $GPG_EXECUTABLE --list-keys
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/travis_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/travis_secret_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/travis_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/travis_secret_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
     - $GPG_EXECUTABLE --list-keys
     - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")
     - VERSION=$(python -c "import setup; print(setup.VERSION)") 
