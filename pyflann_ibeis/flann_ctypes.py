@@ -181,12 +181,11 @@ def load_flann_library():
             #print 'Trying',libname
             libpath = libname
             flannlib = cdll[libpath]
-            return flannlib
             return (flannlib, libpath)
         except Exception:
             pass
 
-    return None
+    return None, None
 
 flannlib, libpath = load_flann_library()
 if flannlib is None:
