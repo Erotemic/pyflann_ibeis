@@ -1,11 +1,13 @@
 
 env:
     global:
-        - secure: "dhtcnIFPpCgaRucwv/Y8IKZcEb1C0tS83W6Z9hu/xD4eKo5dlhThiniLiUL/swxABc5flWTmASAZSi4GEZgz5cNIvZ3ZZ78WQr4zvB7FpdvhdOWu3LVt9ANvnEzl1LHZxhLMjGcJeJfYEJv85pqZ/6ySx0pXG1JFDcbbhBItYL3Upb88GPHygxn68lUM4cVLKqXWLMBGUSWaYJuv61NEcibdStntQRBzaHY6firNaj+1zqVLqSoE8GoV1T2CEuI9qaoIGtNphOggfROzfq3w7YXaE8Uq8pK/0lD+nGdIDW62/dmQnFDoSFWRcTjUvLc3WstSLdIzRjHPdY/wRtoLk7mUsqAzHQ0oIY2aTQ9bYCIfblnJxpHYwksP4GhWzEqoDa4rJnQyMr0+oEGQiya+AFUAGJxTqJMO8LNGBDUasB3qhRi9Tu0i5eVEzpewhRRPXbZ1PvqRTmg98wqyvYr874+xqw9Nn9IbT+fFgK6+inBoaKv8k2zUZX/4YYtdKyZu7RBwEDsFKibsUMBqz9AquAcqYGPK+//vDR7A4N+buzOG6JLzgsxSPnHpG8QAOAS9kUKSGhtdJjmNx3lvjDxLvpBuSKSczsHxBljO3XewaviKAKD+POIG1eCsj8B8NdwupPJpev4o3h+gH/1PO5AzTpVtFhrUZYyG1KqDmn23iNA="
+        - secure: "mGz/wRMS1enFS0bhZOnhOb2yWvJaHaywq766+Fy8e0AWEq2QIaeBA5Um/qz/csP8dLPXW66IfWsUmz6gC+DnZqcDNou4upHnVeYeki8dRuMdHciGebrGHyiUbO/WOMtB5X3XfrL+80WP95t2bEUMaO+n8RqA41T5VkPZ3BezvGnAnorVKzsRw93zPh6QqSBqWj71mKMNqOFOoAHsjlmrzD5vPJOp2F3INsq10qbtIF/P8H8ccgN98MaW2l2AqeICv4F08UZoWVrrZggS7eUv+Pvr3YRRGaZ5Ny1gWXbOkmeKWBL2zqdHIvXO0falgtJaZWKUFRucUlKaekY7jlSB4rEoVGSI8xdIDfEZEWLrdVRpkcGil3rmuFTXnl5rXwIuGOcR9sJje1CZejLR1rtOumf3cNbSAJCT8FJr5eYJ6NUl6Gf1z2sDXTY19ZtvLT9OeQr58kEv7ZoW3gvV3CuYQzBZAl9/SfW8G5PIsldAblPMKjWWilbhSa2NJig5x4tt6hpVwll89VdpS62eL7Hfre5ZKFV+TTUOj7wVdF3oXbK2S+/w/2xQD/Fh60oxK/8tiT4ZWAArzjANcTshW03GPiTVBVSyizs6T5LpugjBuLu6th0qdcNCrxRORHujLV/a2uSzejd3yc3rVufkPPmqIJrO/MFHZseuy0IrA7VIN2Y="
 
-        - secure: "PDxqRpNhaOr2a+morKTM3+vk5614vTuY9lZ7ZpZUOFqNiolFVjLD2tYEUH2iZibRN2ciyB7EQULnfsvsTXlO0uftPVfuSrGKOQPZzBQmzTihwqoOQJJZnLRk/pqnbZUzUtjnTM3Nccv1TY1BYmqN+KNRZvTL+trdeM5yYGLXLizJ0Z44J/6Vk4y8spGwlZ7mShsUiPbMDTF37qsWdZtNIJZFUCdDeDdLwY1LzseVXjMMg6AwsCd2ddtKnHxN+vnXjycFuhoBGjkt0CxZE6Ksb9FvlsjT8dZd11a4W4cr3suvhHDRh9ScRWjZnghuP2ai7GuC7TXnfLsSw722Drmzw8/Bg9+SxvgcqsJJ49c33cMGMLf5WbJdK4SMfji0OchmTKrDlWWERYsjxg6bu/O4STnF87OplnCeKL7tcGxvXazC8WIqqLxY//nlaFoEQZ3Cy8JF8KEwUk48CSbajSrORIXnZsIFPRG8I+xHvbc+EkJqnhLg5T0M+wEMpleSxdUV10h9I6FIBPiSu3prKEdi6gBp0uNMevn419n6C8QnlkH0vuBQDXj/6jgUfJgaZnsX2sNiAn9ahExFz1SUGUVgN/XWzddajOaXvetpUpReKboZ+Pqq54CCNENXhdVqJ02XwI/aiVp+Wx+iLQkVlpJKC28F57dY+0oH3Su34R12ztY="
 
-        - secure: "ObkWOsIH7D4ZjhflwlVWdE0sZslaEHzkp/DiUYycaCwdeAsw8Nlt2zFdKGf46M5vSvciamuHRQkgi5puNxX+S6oRHtYBkFFXT7lJ+i4mE+xi/6pKrBYwfTCioeb1xWoDNBNN9al/cveLDJ1VR4xapu7A060DEDLzx09+K/geWfrjilCI5iW3jvTtd1dUj1/jdzF5CR63ly79qZrTP0WGJf04rdZuEUYwlVfABgxpa/wu6ZaoMm8DS1+t/RGC1MfUfyV/HIhHD95sOM9nB5I7onjiTn+xZgJLUxfKtpzSGN6Ff5Wx8psxyO/QohsiugUt/bKZ9BiaRsDe0nKL83jPGG8j22rpXnwTFZ9iZ3CvEI/0uub0RecOdFLDro3IQ5YlJjmdbzCUT03KqqJcTZzVZUEWIjTCdb6VtiQbqIXEs4BVnxOTa9Hm9lJxDR2topgfrzgKSo4ZBQ/L/NuK3O1+S/2ldBJSG7SPT0vEniIShCexaP38/blqeU5BmSL8LrEv/Mb0FrDnTRKKCCGGW+1xPi7bmqVWKkqeMaESsNEJJx2IXUQ/nkvh2CmPV7RFl4Udgb1xlNKCBP3TuVhhMG/PPC+Csh53dqDFI2VwIrC0xYuPWgWVkyAcEJwd+LCzg+HqljXMmEe1uVN6ss6fdiAvwo278Cu/EMx6J9hNwijLdts="
+        - secure: "QF9Rni2RGXWc3yQq9KKbH+KA+56SwA6q0hQcIc93Yz0XyOuF0AIkDWg4rzP5i90X1bFcocb5YA/eXVm3wZkpXq9EZ4xqtED2WUEbKAzSzXDO43HIzH1nFLwwuQtzedLhwqIXG0cM3aYlR+Et025c93OSG0VdYh/G61m8aoR5k4AoCdYIdwaxjzPh3/BcNW5fExODP3YVJ5/RAeoRkNt5PGRsg/GIZ/rM58ZlEdoqEvjzzPwnAgByy0kowRX3SYK7DGE41vLEP2bcp1DX5UoJawTDpYtHX8we4lKPUL2VHrPr37ZWjZv0qXMp9WUWR5EMMVNOz4HzlhgWPFrAgEgzpozzqKLRLJCYY4eWXdo+7trB+naiGLFFN7KDGsKj5t9OVRz2zX931uAiGJUjoWwm6IG0wrHOIedGw7hW/Lhq67YeYF89S9VR5v3FFZVAUGTcCQVA0lXRDJ54JlXXAd0uFMmPoVgcMaeGzyEdo91sA43rfYBEWVLAdIAaEWgwxt2bSCIxLq/waYVqgrbYNJ3osXYSrv6MF7lEdUy5QpF3yQCShsFr+jkbPRFoTtihjTyLsguuzQovbtFEzp9jkzHte8xM1vT/aa2nsPVaU/Nku9V2+vNPUN/8XcL1vFrRAgXjvJ5fhED2M8NhQj0cfuUk5TQ0Jg19qJIsNmk+BgoTQMI="
+
+
+        - secure: "RPBmaxKq6Wo6vbs69b2Z961B0Jt5RzE0ZP+6RwRkDeoeilbky/K2ODjFheRUS4P6O5JFWUHFG0xwGU0nHh3xHbRXD1GWUHxYrfRfpLvoeQul8Ut9NKvG0TNhT1stAWmsG8kxAaTHQLyRRMpjwhd8lZpPBdn9KMQ7bBO8k/mlx1R2a9TRpuUqZWCtdkW93g8v/ufYn2L2f/jJdKit+BbqzO/GiafmzJaL7wwdzfOu4h5ucRINg5+C56m5TDWeJt+PxTyFDx4esx2kiykvReDs/9IpZTGB5eD/b8OXPHb2TUOsod2AVKRb58Zar+Jgjdn2HHfKn7mimLaE+WIOqrEFujaIUHm+1gZEe6/rc6I8KTMxKUupvXv0qvmUAnz3ctCdp41WY5zZJZ1q8iQjJ69/RHlum3qpJI65+EQkuE5hXWlZsKJd6s5vvHq4eYkB+D4FzUpzPyrPbZgBKmFjw5ussoYkRULaxsTcbSgUjacJhZKvqfv7hKgD0CZF9kWoOe+KFEm82s4S3PMD+CRvaMFHRUQLtFByhu97zCZPwZLvsmmoHjKO4lZPDKdJlKwLnxiyD1sLG3lka5+C82ZTF8GWgsstra0zOB5oCf7otdseFC2aZGV6UfPXrEb8ZVrpcyLrUYYGgdGNYoxib57nHipr6Z5eEmqhTJKwALvmU8Nh3yU="
 
 
 dist: trusty
@@ -69,9 +71,9 @@ after_success:
         gpg --export-ownertrust > dev/gpg_owner_trust
 
         # Encrypt gpg keys and trust with travis secret
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/travis_public_gpg_key.pgp > dev/travis_public_gpg_key.pgp.enc
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/travis_secret_gpg_key.pgp > dev/travis_secret_gpg_key.pgp.enc
-        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -pbkdf2 -md MD5 -pass env:TSP -e -a -in dev/gpg_owner_trust > dev/gpg_owner_trust.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/travis_public_gpg_key.pgp > dev/travis_public_gpg_key.pgp.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/travis_secret_gpg_key.pgp > dev/travis_secret_gpg_key.pgp.enc
+        TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -e -a -in dev/gpg_owner_trust > dev/gpg_owner_trust.enc
 
         source $(secret_unloader.sh)
 
@@ -93,9 +95,9 @@ after_success:
     - $GPG_EXECUTABLE --version
     - openssl version
     - $GPG_EXECUTABLE --list-keys
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/travis_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
-    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pbkdf2 -pass env:TSP -d -a -in dev/travis_secret_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/travis_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
+    - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/travis_secret_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
     - $GPG_EXECUTABLE --list-keys
     - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")
     - VERSION=$(python -c "import setup; print(setup.VERSION)") 
