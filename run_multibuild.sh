@@ -94,7 +94,7 @@ if [ "$_INSIDE_DOCKER" != "YES" ]; then
     set +x
     '''
 
-    BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG.whl)
+    BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG*.whl)
     echo "BDIST_WHEEL_PATH = $BDIST_WHEEL_PATH"
 else
 

@@ -31,8 +31,8 @@ install:
   - travis_retry ./run_multibuild.sh 
   - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)") && 
   - VERSION=$(python -c "import setup; print(setup.VERSION)") && 
-  - BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG.whl)
-  - echo $BDIST_WHEEL_PATH
+  - BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG*.whl)
+  - echo "BDIST_WHEEL_PATH = $BDIST_WHEEL_PATH"
   - pip install $BDIST_WHEEL_PATH
     
 script: 
