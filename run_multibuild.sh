@@ -31,11 +31,8 @@ notes:
 
 
 MB_PYTHON_TAG=cp37-cp37m ./run_multibuild.sh
-
 MB_PYTHON_TAG=cp36-cp36m ./run_multibuild.sh
-
 MB_PYTHON_TAG=cp35-cp35m ./run_multibuild.sh
-
 MB_PYTHON_TAG=cp27-cp27m ./run_multibuild.sh
 
 # MB_PYTHON_TAG=cp27-cp27mu ./run_nmultibuild.sh
@@ -49,7 +46,6 @@ get_native_mb_python_tag(){
     
     https://stackoverflow.com/questions/53409511/what-is-the-difference-between-cpython-27m-and-27mu?noredirect=1&lq=1
     '''
-    # TODO: get if cp27m or cp27mu
     python -c "
 import sys
 import platform
@@ -67,15 +63,16 @@ print(mb_tag)
 }
 
 
-#DOCKER_IMAGE=${DOCKER_IMAGE:="soumith/manylinux-cuda100"}
-#DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/pypa/manylinux2010_x86_64"}
 DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/erotemic/manylinux-for:pyhesaff-0.1.0"}
-#PARENT_USER=${PARENT_USER:="$USER"}
-
 # Valid multibuild python versions are:
 # cp27-cp27m  cp27-cp27mu  cp34-cp34m  cp35-cp35m  cp36-cp36m  cp37-cp37m
-MB_PYTHON_TAG=${MB_PYTHON_TAG:=$(get_native_mb_python_tag)}
-
+MB_PYTHON_TAG=${MB_PYTHON_TAG:=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")}
+VERSION=$(python -c "import setup; print(setup.VERSION)")
+echo "
+MB_PYTHON_TAG = $MB_PYTHON_TAG
+DOCKER_IMAGE = $DOCKER_IMAGE
+VERSION = $VERSION
+"
 
 if [ "$_INSIDE_DOCKER" != "YES" ]; then
 
@@ -97,7 +94,8 @@ if [ "$_INSIDE_DOCKER" != "YES" ]; then
     set +x
     '''
 
-    exit 0;
+    BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG.whl)
+    echo "BDIST_WHEEL_PATH = $BDIST_WHEEL_PATH"
 else
 
     set -x

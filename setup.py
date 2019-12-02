@@ -6,6 +6,22 @@ from os.path import exists
 from collections import OrderedDict
 
 
+def native_mb_python_tag():
+    import sys
+    import platform
+    major = sys.version_info[0]
+    minor = sys.version_info[1]
+    ver = '{}{}'.format(major, minor)
+    if platform.python_implementation() == 'CPython':
+        # TODO: get if cp27m or cp27mu
+        impl = 'cp'
+        abi = 'm'
+    else:
+        raise NotImplementedError(impl)
+    mb_tag = '{impl}{ver}-{impl}{ver}{abi}'.format(**locals())
+    return mb_tag
+
+
 def parse_version(fpath='pyflann_ibeis/__init__.py'):
     """
     Statically parse the version number from a python file
@@ -119,6 +135,8 @@ except Exception:
 
 NAME = 'pyflann_ibeis'
 
+
+MB_PYTHON_TAG = native_mb_python_tag()  # NOQA
 VERSION = version = parse_version('pyflann_ibeis/__init__.py')  # must be global for git tags
 
 AUTHORS = ['Jon Crall', 'Marius Muja']
