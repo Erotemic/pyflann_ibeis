@@ -64,7 +64,6 @@ else:
 mb_tag = '{impl}{ver}-{impl}{ver}{abi}'.format(**locals())
 print(mb_tag)
 "
-
 }
 
 

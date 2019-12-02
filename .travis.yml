@@ -30,6 +30,8 @@ before_install:
 
 install:
   - travis_retry ./run_multibuild.sh 
+  - BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-*.whl)
+  - pip install $BDIST_WHEEL_PATH
     
 script: 
   - travis_wait ./run_tests.py 
