@@ -24,14 +24,15 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#from pyflann.flann_ctypes import *  # NOQA
+#from pyflann_ibeis.flann_ctypes import *  # NOQA
 import sys
 from ctypes import pointer, c_float, byref, c_char_p
-from pyflann.flann_ctypes import (flannlib, FLANNParameters, allowed_types,
-                                  ensure_2d_array, default_flags, flann)
+from pyflann_ibeis.flann_ctypes import (flannlib, FLANNParameters,
+                                        allowed_types, ensure_2d_array,
+                                        default_flags, flann)
 import numpy as np
 
-from pyflann.exceptions import FLANNException
+from pyflann_ibeis.exceptions import FLANNException
 import numpy.random as _rn
 
 

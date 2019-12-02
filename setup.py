@@ -1,9 +1,31 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, print_function
 import sys
-import skbuild
 from os.path import exists
 from collections import OrderedDict
+
+
+def native_mb_python_tag():
+    import sys
+    import platform
+    major = sys.version_info[0]
+    minor = sys.version_info[1]
+    ver = '{}{}'.format(major, minor)
+    if platform.python_implementation() == 'CPython':
+        # TODO: get if cp27m or cp27mu
+        impl = 'cp'
+        if ver == '27':
+            IS_27_BUILT_WITH_UNICODE = True  # how to determine this?
+            if IS_27_BUILT_WITH_UNICODE:
+                abi = 'mu'
+            else:
+                abi = 'm'
+        else:
+            abi = 'm'
+    else:
+        raise NotImplementedError(impl)
+    mb_tag = '{impl}{ver}-{impl}{ver}{abi}'.format(**locals())
+    return mb_tag
 
 
 def parse_version(fpath='pyflann_ibeis/__init__.py'):
@@ -119,11 +141,13 @@ except Exception:
 
 NAME = 'pyflann_ibeis'
 
+
+MB_PYTHON_TAG = native_mb_python_tag()  # NOQA
 VERSION = version = parse_version('pyflann_ibeis/__init__.py')  # must be global for git tags
 
 AUTHORS = ['Jon Crall', 'Marius Muja']
 AUTHOR_EMAIL = 'erotemic@gmail.com'
-URL = 'https://github.com/Erotemic/ibeis-flann'
+URL = 'https://github.com/Erotemic/pyflann_ibeis'
 LICENSE = 'BSD'
 DESCRIPTION = 'FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors'
 
@@ -194,4 +218,5 @@ if __name__ == '__main__':
     """
     python -c "import pyflann_ibeis; print(pyflann_ibeis.__file__)"
     """
+    import skbuild
     skbuild.setup(**KWARGS)

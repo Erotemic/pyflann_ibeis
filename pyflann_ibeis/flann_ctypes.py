@@ -146,6 +146,13 @@ def load_flann_library():
 
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
+    attempts = []
+
+    def try_lib(libpath):
+        attempts.append(libpath)
+        flannlib = cdll[libpath]
+        return (flannlib, libpath)
+
     libnames = ['libflann.so']
     libdir = 'lib'
     if sys.platform == 'win32':
@@ -156,16 +163,13 @@ def load_flann_library():
     while root_dir is not None:
         for libname in libnames:
             try:
-                #print 'Trying ',os.path.join(root_dir,'lib',libname)
                 libpath = os.path.join(root_dir, libdir, libname)
-                flannlib = cdll[libpath]
-                return (flannlib, libpath)
+                return try_lib(libpath)
             except Exception:
                 pass
             try:
                 libpath = os.path.join(root_dir, 'build', libdir, libname)
-                flannlib = cdll[libpath]
-                return (flannlib, libpath)
+                return try_lib(libpath)
             except Exception:
                 pass
         tmp = os.path.dirname(root_dir)
@@ -178,15 +182,15 @@ def load_flann_library():
     # a full path as a last resort
     for libname in libnames:
         try:
-            #print 'Trying',libname
             libpath = libname
-            flannlib = cdll[libpath]
-            return flannlib
-            return (flannlib, libpath)
+            return try_lib(libpath)
         except Exception:
             pass
 
-    return None
+    print('attempts = '.format('\n'.join(attempts)))
+    raise ImportError('Failed to load dynamic library. Did you compile FLANN?')
+
+    return None, None
 
 flannlib, libpath = load_flann_library()
 if flannlib is None:
