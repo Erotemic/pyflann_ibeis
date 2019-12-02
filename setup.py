@@ -50,7 +50,7 @@ def parse_version(fpath='pyflann_ibeis/__init__.py'):
     return visitor.version
 
 
-def parse_long_description(fpath='README.md'):
+def parse_long_description(fpath='README.rst'):
     """
     Reads README text, but doesn't break if README does not exist.
     """
@@ -158,8 +158,8 @@ KWARGS = OrderedDict(
     author=', '.join(AUTHORS),
     author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
-    long_description=parse_long_description('README.md'),
-    long_description_content_type='text/markdown',
+    long_description=parse_long_description('README.rst'),
+    long_description_content_type='text/x-rst',
     url=URL,
     license=LICENSE,
     install_requires=parse_requirements('requirements/runtime.txt'),

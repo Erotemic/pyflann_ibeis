@@ -26,11 +26,13 @@ Usage:
 
     source $(secret_loader.sh)
 
-    # Interactive/Dry run
-    ./publish.sh 
+    MB_PYTHON_TAG=cp37-cp37m 
+    MB_PYTHON_TAG=cp36-cp36m 
+    MB_PYTHON_TAG=cp35-cp35m 
 
-    # Non-Interactive run
-    #./publish.sh yes
+    MB_PYTHON_TAG=cp27-cp27mu
+    MB_PYTHON_TAG=$MB_PYTHON_TAG ./run_multibuild.sh
+    DEPLOY_REMOTE=ibeis MB_PYTHON_TAG=$MB_PYTHON_TAG ./publish.sh yes
 '''
 
 check_variable(){
