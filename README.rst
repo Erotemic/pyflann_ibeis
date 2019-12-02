@@ -58,3 +58,4 @@ Please report bugs or feature requests using [github's issue tracker](http://git
    :target: https://pypistats.org/packages/pyflann_ibeis
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/pyflann_ibeis/badge/?version=latest
     :target: http://pyflann_ibeis.readthedocs.io/en/latest/
+
