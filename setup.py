@@ -123,7 +123,7 @@ VERSION = version = parse_version('pyflann_ibeis/__init__.py')  # must be global
 
 AUTHORS = ['Jon Crall', 'Marius Muja']
 AUTHOR_EMAIL = 'erotemic@gmail.com'
-URL = 'https://github.com/Erotemic/ibeis-flann'
+URL = 'https://github.com/Erotemic/pyflann_ibeis'
 LICENSE = 'BSD'
 DESCRIPTION = 'FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors'
 
