@@ -119,10 +119,6 @@ def main():
 
         ''').format(NAME=NAME, ROOT=ROOT, DOCKER_TAG=DOCKER_TAG,
                     DOCKER_URI=DOCKER_URI), 'bash'))
-
-    print('DOCKER_TAG = {!r}'.format(DOCKER_TAG))
-    print('dockerfile_fpath = {!r}'.format(dockerfile_fpath))
-
     # push_cmd = 'docker push quay.io/erotemic/manylinux-opencv:manylinux1_x86_64-opencv4.1.0-py3.6'
     # print('push_cmd = {!r}'.format(push_cmd))
     # print(push_cmd)

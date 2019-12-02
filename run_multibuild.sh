@@ -68,7 +68,8 @@ print(mb_tag)
 
 
 #DOCKER_IMAGE=${DOCKER_IMAGE:="soumith/manylinux-cuda100"}
-DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/pypa/manylinux2010_x86_64"}
+#DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/pypa/manylinux2010_x86_64"}
+DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/erotemic/manylinux-for:pyhesaff-0.1.0"}
 #PARENT_USER=${PARENT_USER:="$USER"}
 
 # Valid multibuild python versions are:
@@ -97,58 +98,50 @@ if [ "$_INSIDE_DOCKER" != "YES" ]; then
     '''
 
     exit 0;
+else
+
+    set -x
+    set -e
+
+    #yum install lz4-devel -y
+    # Define multibuild workdir where we will try to store all temporary files
+    #MB_WORKDIR=mb_work
+    #mkdir -p $MB_WORKDIR
+    #chmod -R o+rw $MB_WORKDIR
+    #PYPREFIX=/opt/python/$MB_PYTHON_TAG
+    #PYEXE=${PYPREFIX}/bin/python
+    #$PYEXE --version  # Print out python version for debugging
+    #$PYEXE -m pip install virtualenv
+    #$PYEXE -m virtualenv $VENV_DIR
+    #VENV_DIR=$MB_WORKDIR/venv_$MB_PYTHON_TAG
+
+    VENV_DIR=/venv-$MB_PYTHON_TAG
+    ls /
+    echo "VENV_DIR = $VENV_DIR"
+    #chmod -R o+rw $VENV_DIR
+
+    set +x
+    echo "activate virtualenv"
+    source $VENV_DIR/bin/activate
+    echo "activated virtualenv"
+    set -x
+
+    #export PIP_CACHE_DIR="$MB_WORKDIR/cache_pip"
+    #pip install pip -U
+    #pip install pip setuptools -U
+    #pip install -r requirements.txt
+    # we only need build requirements to make the wheel
+    #pip install -r requirements/build.txt
+
+    #chmod -R o+rw $VENV_DIR
+
+    python setup.py bdist_wheel
+
+    chmod -R o+rw _skbuild
+    chmod -R o+rw dist
+
+    auditwheel repair dist/pyflann_ibeis-*-$MB_PYTHON_TAG-*.whl
+    chmod -R o+rw wheelhouse
+
+    chmod -R o+rw pyflann_ibeis.egg-info
 fi
-
-
-set -x
-set -e
-
-yum install lz4-devel -y
-
-
-# Define multibuild workdir where we will try to store all temporary files
-MB_WORKDIR=mb_work
-mkdir -p $MB_WORKDIR
-chmod -R o+rw $MB_WORKDIR
-
-
-PYPREFIX=/opt/python/$MB_PYTHON_TAG
-PYEXE=${PYPREFIX}/bin/python
-VENV_DIR=$MB_WORKDIR/venv_$MB_PYTHON_TAG
-
-echo "VENV_DIR = $VENV_DIR"
-
-$PYEXE --version  # Print out python version for debugging
-$PYEXE -m pip install virtualenv
-$PYEXE -m virtualenv $VENV_DIR
-
-chmod -R o+rw $VENV_DIR
-#setfacl -d -m g::rwx $VENV_DIR
-#setfacl -d -m o::rwx $VENV_DIR
-
-set +x
-echo "activate virtualenv"
-source $VENV_DIR/bin/activate
-echo "activated virtualenv"
-set -x
-
-export PIP_CACHE_DIR="$MB_WORKDIR/cache_pip"
-
-pip install pip -U
-pip install pip setuptools -U
-
-#pip install -r requirements.txt
-# we only need build requirements to make the wheel
-pip install -r requirements/build.txt
-
-chmod -R o+rw $VENV_DIR
-
-python setup.py bdist_wheel
-
-chmod -R o+rw _skbuild
-chmod -R o+rw dist
-
-auditwheel repair dist/pyflann_ibeis-*-$MB_PYTHON_TAG-*.whl
-chmod -R o+rw wheelhouse
-
-chmod -R o+rw pyflann_ibeis.egg-info
