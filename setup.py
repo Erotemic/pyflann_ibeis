@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, print_function
 import sys
-import skbuild
 from os.path import exists
 from collections import OrderedDict
 
@@ -212,4 +211,5 @@ if __name__ == '__main__':
     """
     python -c "import pyflann_ibeis; print(pyflann_ibeis.__file__)"
     """
+    import skbuild
     skbuild.setup(**KWARGS)

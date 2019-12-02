@@ -48,6 +48,7 @@ CURRENT_BRANCH=${CURRENT_BRANCH:=$(git branch | grep \* | cut -d ' ' -f2)}
 DEPLOY_BRANCH=${DEPLOY_BRANCH:=release}
 DEPLOY_REMOTE=${DEPLOY_REMOTE:=origin}
 VERSION=$(python -c "import setup; print(setup.version)")
+MB_PYTHON_TAG=${MB_PYTHON_TAG:=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")}
 
 check_variable CURRENT_BRANCH
 check_variable DEPLOY_BRANCH
@@ -104,7 +105,8 @@ echo "LIVE BUILDING"
 #python setup.py bdist_wheel --universal
 #python setup.py sdist 
 
-BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-*.whl)
+BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG*.whl)
+echo "BDIST_WHEEL_PATH = $BDIST_WHEEL_PATH"
 #SDIST_PATH=$(dir wheelhouse/*-$VERSION*.tar.gz)
 echo "
 echo "VERSION='$VERSION'"
