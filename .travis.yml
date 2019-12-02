@@ -28,8 +28,8 @@ before_install:
   - pip install -r requirements.txt -U
 
 install:
-  - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)") && 
-  - VERSION=$(python -c "import setup; print(setup.VERSION)") && 
+  - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")
+  - VERSION=$(python -c "import setup; print(setup.VERSION)") 
   - travis_retry MB_PYTHON_TAG=$MB_PYTHON_TAG ./run_multibuild.sh 
   - BDIST_WHEEL_PATH=$(ls wheelhouse/*-$VERSION-$MB_PYTHON_TAG*.whl)
   - echo "BDIST_WHEEL_PATH = $BDIST_WHEEL_PATH"
@@ -97,6 +97,8 @@ after_success:
     - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
     - TSP=$CI_GITHUB_SECRET openssl enc -aes-256-cbc -md MD5 -pass env:TSP -d -a -in dev/travis_secret_gpg_key.pgp.enc | $GPG_EXECUTABLE --import 
     - $GPG_EXECUTABLE --list-keys
+    - MB_PYTHON_TAG=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")
+    - VERSION=$(python -c "import setup; print(setup.VERSION)") 
     - |
         pip install twine
         if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
