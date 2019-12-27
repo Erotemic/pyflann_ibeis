@@ -9,30 +9,33 @@ import ubelt as ub
 
 
 def main():
+
+    # TODO: find a better place for root
     ROOT = join(os.getcwd())
     # ROOT = '.'
     os.chdir(ROOT)
 
     NAME = 'pyhesaff'
-    VERSION = '0.1.0'
+    VERSION = '0.1.1'
     DOCKER_TAG = '{}-{}'.format(NAME, VERSION )
 
     QUAY_REPO = 'quay.io/erotemic/manylinux-for'
     DOCKER_URI = '{QUAY_REPO}:{DOCKER_TAG}'.format(**locals())
 
     dockerfile_fpath = join(ROOT, 'Dockerfile')
+
     # This docker code is very specific for building linux binaries.
     # We will need to do a bit of refactoring to handle OSX and windows.
     # But the goal is to get at least one OS working end-to-end.
-
     """
     Notes:
         docker run --rm -it quay.io/pypa/manylinux2010_x86_64 /bin/bash
+        ---
+        ls /opt/python
     """
     docker_code = ub.codeblock(
         '''
         FROM quay.io/pypa/manylinux2010_x86_64
-        # FROM quay.io/skvark/manylinux1_x86_64
 
         RUN yum install lz4-devel -y
 
@@ -65,6 +68,12 @@ def main():
             /opt/python/$MB_PYTHON_TAG/bin/python -m virtualenv ./venv-$MB_PYTHON_TAG && \
             source ./venv-$MB_PYTHON_TAG/bin/activate && \
             pip install scikit-build cmake ninja
+
+        RUN MB_PYTHON_TAG=cp38-cp38  && \
+            /opt/python/$MB_PYTHON_TAG/bin/python -m pip install setuptools pip virtualenv -U && \
+            /opt/python/$MB_PYTHON_TAG/bin/python -m virtualenv ./venv-$MB_PYTHON_TAG && \
+            source ./venv-$MB_PYTHON_TAG/bin/activate && \
+            pip install scikit-build cmake ninja
         ''')
 
     try:
@@ -78,7 +87,6 @@ def main():
 
     docker_build_cli = ' '.join([
         'docker', 'build',
-        # '--build-arg PY_VER={}'.format(PY_VER),
         '--tag {}'.format(DOCKER_TAG),
         '-f {}'.format(dockerfile_fpath),
         '.'
@@ -105,23 +113,27 @@ def main():
         # Test that we can get a bash terminal
         docker run -v -it {DOCKER_TAG} bash
 
+        # Create a tag for the docker image
+        docker tag {DOCKER_TAG} {DOCKER_URI}
+
+        # Export your docker image to a file
         docker save -o ${ROOT}/{DOCKER_TAG}.docker.tar {DOCKER_TAG}
 
-        # To publish to quay
+        # Login to a docker registry (we are using quay)
 
-        source $(secret_loader.sh)
+        # In some cases this works,
+        docker login
+
+        # But you may need to specify secret credentials
+        load_secrets
         echo "QUAY_USERNAME = $QUAY_USERNAME"
         docker login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io
+        unload_secrets
 
-
-        docker tag {DOCKER_TAG} {DOCKER_URI}
+        # Upload the docker image to quay.io
         docker push {DOCKER_URI}
-
         ''').format(NAME=NAME, ROOT=ROOT, DOCKER_TAG=DOCKER_TAG,
                     DOCKER_URI=DOCKER_URI), 'bash'))
-    # push_cmd = 'docker push quay.io/erotemic/manylinux-opencv:manylinux1_x86_64-opencv4.1.0-py3.6'
-    # print('push_cmd = {!r}'.format(push_cmd))
-    # print(push_cmd)
 
     PUBLISH = 0
     if PUBLISH:
