@@ -16,7 +16,7 @@ def main():
     os.chdir(ROOT)
 
     NAME = 'pyhesaff'
-    VERSION = '0.1.1'
+    VERSION = '0.1.2'
     DOCKER_TAG = '{}-{}'.format(NAME, VERSION )
 
     QUAY_REPO = 'quay.io/erotemic/manylinux-for'
@@ -33,9 +33,12 @@ def main():
         ---
         ls /opt/python
     """
+
+    BASE_IMAGE = 'quay.io/pypa/manylinux2010_x86_64'
+
     docker_code = ub.codeblock(
-        '''
-        FROM quay.io/pypa/manylinux2010_x86_64
+        f'''
+        FROM {BASE_IMAGE}
 
         RUN yum install lz4-devel -y
 
@@ -76,14 +79,16 @@ def main():
             pip install scikit-build cmake ninja
         ''')
 
+    docker_code2 = '\n\n'.join([ub.paragraph(p) for p in docker_code.split('\n\n')])
+
     try:
         print(ub.color_text('\n--- DOCKER CODE ---', 'white'))
-        print(ub.highlight_code(docker_code, 'docker'))
+        print(ub.highlight_code(docker_code2, 'docker'))
         print(ub.color_text('--- END DOCKER CODE ---\n', 'white'))
     except Exception:
         pass
     with open(dockerfile_fpath, 'w') as file:
-        file.write(docker_code)
+        file.write(docker_code2)
 
     docker_build_cli = ' '.join([
         'docker', 'build',
@@ -92,17 +97,19 @@ def main():
         '.'
     ])
     print('docker_build_cli = {!r}'.format(docker_build_cli))
-    info = ub.cmd(docker_build_cli, verbose=3, shell=True)
-
-    if info['ret'] != 0:
-        print(ub.color_text('\n--- FAILURE ---', 'red'))
-        print('Failed command:')
-        print(info['command'])
-        print(info['err'])
-        print('NOTE: sometimes reruning the command manually works')
-        raise Exception('Building docker failed with exit code {}'.format(info['ret']))
+    if ub.argflag('--dry'):
+        print('DRY RUN')
     else:
-        print(ub.color_text('\n--- SUCCESS ---', 'green'))
+        info = ub.cmd(docker_build_cli, verbose=3, shell=True)
+        if info['ret'] != 0:
+            print(ub.color_text('\n--- FAILURE ---', 'red'))
+            print('Failed command:')
+            print(info['command'])
+            print(info['err'])
+            print('NOTE: sometimes reruning the command manually works')
+            raise Exception('Building docker failed with exit code {}'.format(info['ret']))
+        else:
+            print(ub.color_text('\n--- SUCCESS ---', 'green'))
 
     print(ub.highlight_code(ub.codeblock(
         r'''
@@ -147,6 +154,8 @@ def main():
 if __name__ == '__main__':
     """
     CommandLine:
+        python ~/code/flann/dev/docker/make_base_image.py --dry
+
         python ~/code/flann/dev/docker/make_base_image.py
     """
     main()
