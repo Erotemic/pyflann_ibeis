@@ -81,8 +81,6 @@ def main():
 
     docker_code2 = '\n\n'.join([ub.paragraph(p) for p in docker_code.split('\n\n')])
 
-    if ub.argflag('--dry'):
-        print('WOULD RUN')
     try:
         print(ub.color_text('\n--- DOCKER CODE ---', 'white'))
         print(ub.highlight_code(docker_code2, 'docker'))
@@ -101,6 +99,8 @@ def main():
     print('docker_build_cli = {!r}'.format(docker_build_cli))
     if ub.argflag('--dry'):
         print('DRY RUN')
+        print('WOULD RUN')
+        print(docker_build_cli)
     else:
         info = ub.cmd(docker_build_cli, verbose=3, shell=True)
         if info['ret'] != 0:
