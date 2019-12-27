@@ -109,7 +109,6 @@ def main():
         # Finished creating the docker image.
         # To test / export / publish you can do something like this:
 
-
         # Test that we can get a bash terminal
         docker run -v -it {DOCKER_TAG} bash
 
