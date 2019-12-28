@@ -119,7 +119,7 @@ def main():
         # To test / export / publish you can do something like this:
 
         # Test that we can get a bash terminal
-        docker run -v -it {DOCKER_TAG} bash
+        docker run -it {DOCKER_TAG} /bin/bash
 
         # Create a tag for the docker image
         docker tag {DOCKER_TAG} {DOCKER_URI}

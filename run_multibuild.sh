@@ -30,6 +30,7 @@ notes:
         python run_tests.py
 
 
+MB_PYTHON_TAG=cp38-cp38 ./run_multibuild.sh
 MB_PYTHON_TAG=cp37-cp37m ./run_multibuild.sh
 MB_PYTHON_TAG=cp36-cp36m ./run_multibuild.sh
 MB_PYTHON_TAG=cp35-cp35m ./run_multibuild.sh
@@ -63,7 +64,7 @@ print(mb_tag)
 }
 
 
-DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/erotemic/manylinux-for:pyhesaff-0.1.0"}
+DOCKER_IMAGE=${DOCKER_IMAGE:="quay.io/erotemic/manylinux-for:pyhesaff-0.1.2"}
 # Valid multibuild python versions are:
 # cp27-cp27m  cp27-cp27mu  cp34-cp34m  cp35-cp35m  cp36-cp36m  cp37-cp37m
 MB_PYTHON_TAG=${MB_PYTHON_TAG:=$(python -c "import setup; print(setup.MB_PYTHON_TAG)")}
