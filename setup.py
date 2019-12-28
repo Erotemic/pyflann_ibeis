@@ -76,7 +76,8 @@ def parse_long_description(fpath='README.rst'):
     Reads README text, but doesn't break if README does not exist.
     """
     if exists(fpath):
-        return open(fpath, 'r').read()
+        with open(fpath, 'r') as file:
+            return file.read()
     return ''
 
 
