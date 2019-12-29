@@ -15,7 +15,9 @@ Requirements:
 
 Notes:
     # NEW API TO UPLOAD TO PYPI
+    # https://docs.travis-ci.com/user/deployment/pypi/
     # https://packaging.python.org/tutorials/distributing-packages/
+    # https://stackoverflow.com/questions/45188811/how-to-gpg-sign-a-file-that-is-built-by-travis-ci
 
 Usage:
     cd <YOUR REPO>
