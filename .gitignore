@@ -1,5 +1,4 @@
 *.save
-.*
 tmp
 *.pyc
 src/matlab/*.dat
