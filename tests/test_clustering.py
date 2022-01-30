@@ -103,6 +103,6 @@ class Test_PyFLANN_clustering(unittest.TestCase):
 
 if __name__ == '__main__':
     """
-    pytest ~/code/flann/test/test_clustering.py --verbose
+    pytest ~/code/flann/tests/test_clustering.py --verbose
     """
     unittest.main()
