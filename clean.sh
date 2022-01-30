@@ -5,6 +5,7 @@ rm -rf _skbuild
 rm -rf pyflann/lib
 rm -rf dist
 rm -rf build
+rm -rf htmlcov
 rm -rf pyflann_ibeis.egg-info
 
 rm -rf mb_work

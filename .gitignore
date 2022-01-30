@@ -20,3 +20,4 @@ TODO
 _skbuild
 pyflann.egg-info
 wheelhouse
+.coverage
