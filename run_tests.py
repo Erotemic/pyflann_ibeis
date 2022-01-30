@@ -31,7 +31,7 @@ def replace_docker_path(path, runner_project_dir):
     return pattern.sub(runner_project_dir, path)
 
 
-def update_coverag_file(coverage_path, runner_project_dir):
+def update_coverage_file(coverage_path, runner_project_dir):
     """
     Since the paths inside of docker vary from the runner paths,
     the paths in the .coverage file need to be adjusted to combine them,
@@ -70,7 +70,7 @@ def copy_coverage_cibuildwheel_docker(runner_project_dir):
     """
     coverage_path = '/project/tests/.coverage'
     if os.path.isfile(coverage_path):
-        update_coverag_file(coverage_path, runner_project_dir)
+        update_coverage_file(coverage_path, runner_project_dir)
         env_hash = hash((sys.version, os.environ.get('AUDITWHEEL_PLAT', '')))
         os.makedirs('/output', exist_ok=True)
         os.rename(coverage_path, '/output/.coverage.{}'.format(env_hash))
