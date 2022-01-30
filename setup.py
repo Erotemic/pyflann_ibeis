@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+"""
+
+
+Build Wheels:
+    pip install cibuildwheel
+
+    CIBW_SKIP='pp*' cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
+
+"""
 from __future__ import absolute_import, division, print_function
 import sys
 from os.path import exists
@@ -196,17 +205,19 @@ KWARGS = OrderedDict(
     # The combination of packages and package_dir is how scikit-build will
     # know that the cmake installed files belong in the pyflann module and
     # not the data directory.
-    packages=[
-        'pyflann_ibeis',
-        # These are generated modules that will be created via build
-        'pyflann_ibeis.lib',
-    ],
-    package_dir={
-        'pyflann_ibeis': 'pyflann_ibeis',
-        # Note: this requires that FLANN_LIB_INSTALL_DIR is set to pyflann/lib
-        # in the src/cpp/CMakeLists.txt
-        'pyflann_ibeis.lib': 'pyflann_ibeis/lib',
-    },
+
+    # packages=[
+    #     'pyflann_ibeis',
+    #     # These are generated modules that will be created via build
+    #     'pyflann_ibeis.lib',
+    # ],
+    # package_dir={
+    #     'pyflann_ibeis': 'pyflann_ibeis',
+    #     # Note: this requires that FLANN_LIB_INSTALL_DIR is set to pyflann/lib
+    #     # in the src/cpp/CMakeLists.txt
+    #     'pyflann_ibeis.lib': 'pyflann_ibeis/lib',
+    # },
+
     include_package_data=False,
     # List of classifiers available at:
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -218,11 +229,10 @@ KWARGS = OrderedDict(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Image Recognition'
     ],
