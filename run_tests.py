@@ -91,7 +91,7 @@ if __name__ == '__main__':
     except ImportError:
         print('running this test script requires ubelt')
         raise
-    package_name = 'line_profiler'
+    package_name = 'pyflann_ibeis'
     # Statically check if ``package_name`` is installed outside of the repo.
     # To do this, we make a copy of PYTHONPATH, remove the repodir, and use
     # ubelt to check to see if ``package_name`` can be resolved to a path.
