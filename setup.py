@@ -210,17 +210,17 @@ KWARGS = OrderedDict(
     # know that the cmake installed files belong in the pyflann module and
     # not the data directory.
 
-    # packages=[
-    #     'pyflann_ibeis',
-    #     # These are generated modules that will be created via build
-    #     'pyflann_ibeis.lib',
-    # ],
-    # package_dir={
-    #     'pyflann_ibeis': 'pyflann_ibeis',
-    #     # Note: this requires that FLANN_LIB_INSTALL_DIR is set to pyflann/lib
-    #     # in the src/cpp/CMakeLists.txt
-    #     'pyflann_ibeis.lib': 'pyflann_ibeis/lib',
-    # },
+    packages=[
+        'pyflann_ibeis',
+        # These are generated modules that will be created via build
+        'pyflann_ibeis.lib',
+    ],
+    package_dir={
+        'pyflann_ibeis': 'pyflann_ibeis',
+        # Note: this requires that FLANN_LIB_INSTALL_DIR is set to pyflann/lib
+        # in the src/cpp/CMakeLists.txt
+        'pyflann_ibeis.lib': 'pyflann_ibeis/lib',
+    },
 
     include_package_data=False,
     # List of classifiers available at:
