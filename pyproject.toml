@@ -8,11 +8,11 @@ build-verbosity = 1
 
 manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
 manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
-musllinux-x86_64-image = "quay.io/erotemic/musllinux2014_x86_64_for:lz4"
-musllinux-i686-image = "quay.io/erotemic/musllinux2014_i686_for:lz4"
+musllinux-x86_64-image = "quay.io/erotemic/muslinux_1_1_x86_64_for:lz4"
+musllinux-i686-image = "quay.io/erotemic/musllinux_1_1_i686_for:lz4"
 
 manylinux-aarch64-image = "quay.io/erotemic/manylinux2014_aarch64_for:lz4"
-musllinux-aarch64-image = "quay.io/erotemic/musllinux2014_aarch64_for:lz4"
+musllinux-aarch64-image = "quay.io/erotemic/musllinux_1_1_aarch64_for:lz4"
 
 #manylinux-ppc64le-image
 #manylinux-s390x-image
