@@ -8,7 +8,7 @@ TODO: These instructions are currently pieced together from old disparate
 instances, and are not yet fully organized.
 
 The original template file should be:
-~/misc/templates/PYPKG/dev/setup_secrets.sh
+~/misc/templates/pyflann_ibeis/dev/setup_secrets.sh
 
 Development script for updating secrets when they rotate
 
@@ -39,7 +39,7 @@ GITLAB ACTION INSTRUCTIONS
     ```bash
     cat .setup_secrets.sh | \
         sed "s|utils|<YOUR-GROUP>|g" | \
-        sed "s|PYPKG|<YOUR-REPO>|g" | \
+        sed "s|pyflann_ibeis|<YOUR-REPO>|g" | \
         sed "s|travis-ci-Erotemic|<YOUR-GPG-ID>|g" | \
         sed "s|CI_SECRET|<YOUR_CI_SECRET>|g" | \
         sed "s|GITLAB_ORG_PUSH_TOKEN|<YOUR_GIT_ORG_PUSH_TOKEN>|g" | \
@@ -48,12 +48,12 @@ GITLAB ACTION INSTRUCTIONS
     ```
 
     * Make sure you add Runners to your project 
-    https://gitlab.org.com/utils/PYPKG/-/settings/ci_cd 
+    https://gitlab.org.com/utils/pyflann_ibeis/-/settings/ci_cd 
     in Runners-> Shared Runners
     and Runners-> Available specific runners
 
     * Ensure that you are auto-cancel redundant pipelines.
-    Navigate to https://gitlab.kitware.com/utils/PYPKGS/-/settings/ci_cd and ensure "Auto-cancel redundant pipelines" is checked.
+    Navigate to https://gitlab.kitware.com/utils/pyflann_ibeisS/-/settings/ci_cd and ensure "Auto-cancel redundant pipelines" is checked.
 
     More details are here https://docs.gitlab.com/ee/ci/pipelines/settings.html#auto-cancel-redundant-pipelines
 

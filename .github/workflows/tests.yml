@@ -26,7 +26,7 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 ./PYPKG --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 ./pyflann_ibeis --count --select=E9,F63,F7,F82 --show-source --statistics
     #    # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
     #    flake8 . --count --exit-zero --max-complexity=20 --max-line-length=127 --statistics
 
@@ -51,17 +51,17 @@ jobs:
     - name: Install sdist
       run: |
         ls -al ./dist
-        pip install dist/PYPKG*.tar.gz -v
-        mv PYPKG ignore_src_PYPKG
+        pip install dist/pyflann_ibeis*.tar.gz -v
+        mv pyflann_ibeis ignore_src_pyflann_ibeis
     - name: Test minimal sdist
       run: |
         pwd
         ls -al
         # Run the tests
         # Get path to installed package
-        MOD_DPATH=$(python -c "import PYPKG, os; print(os.path.dirname(PYPKG.__file__))")
+        MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
         echo "MOD_DPATH = $MOD_DPATH"
-        python -m pytest -p pytester -p no:doctest --xdoctest --cov=PYPKG $MOD_DPATH ./tests
+        python -m pytest -p pytester -p no:doctest --xdoctest --cov=pyflann_ibeis $MOD_DPATH ./tests
 
     - name: Test full sdist
       run: |
@@ -70,7 +70,7 @@ jobs:
         python -m pip install -r requirements/optional.txt
         # Run the tests
         # Get path to installed package
-        MOD_DPATH=$(python -c "import PYPKG, os; print(os.path.dirname(PYPKG.__file__))")
+        MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
         echo "MOD_DPATH = $MOD_DPATH"
         python -m pytest -p pytester -p no:doctest --xdoctest $MOD_DPATH ./tests
 
@@ -176,10 +176,10 @@ jobs:
         #OS_NAME: ${{ matrix.os }}
       run: | 
         # Remove source directory (ensure it doesn't conflict)
-        mv PYPKG ignore_src_PYPKG
+        mv pyflann_ibeis ignore_src_pyflann_ibeis
         rm pytest.ini
         # Install the wheel
-        python -m pip install wheelhouse/PYPKG*.whl
+        python -m pip install wheelhouse/pyflann_ibeis*.whl
         python -m pip install -r requirements/tests.txt
         # Run in a sandboxed directory
         WORKSPACE_DNAME="testdir_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
@@ -187,9 +187,9 @@ jobs:
         cd $WORKSPACE_DNAME
         # Run the tests
         # Get path to installed package
-        MOD_DPATH=$(python -c "import PYPKG, os; print(os.path.dirname(PYPKG.__file__))")
+        MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
         echo "MOD_DPATH = $MOD_DPATH"
-        python -m pytest -p pytester -p no:doctest --xdoctest --cov-config ../.coveragerc --cov-report term --cov=PYPKG $MOD_DPATH ../tests
+        python -m pytest -p pytester -p no:doctest --xdoctest --cov-config ../.coveragerc --cov-report term --cov=pyflann_ibeis $MOD_DPATH ../tests
         mv .coverage "../.coverage.$WORKSPACE_DNAME"
         cd ..
         # Move coverage file to a new name
@@ -228,7 +228,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wheels
-        path: ./wheelhouse/PYPKG*.whl
+        path: ./wheelhouse/pyflann_ibeis*.whl
 
   deploy:
     # Publish on the real PyPI
@@ -356,7 +356,7 @@ jobs:
 #    cd $HOME/code/act
 #    chmod +x install.sh
 #    ./install.sh -b $HOME/.local/opt/act
-#    cd $HOME/code/PYPKG
+#    cd $HOME/code/pyflann_ibeis
 
 #    load_secrets
 #    unset GITHUB_TOKEN
