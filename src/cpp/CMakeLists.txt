@@ -18,8 +18,10 @@ file(GLOB_RECURSE CU_SOURCES *.cu)
 
 #set(SPECIAL_PRE_FLAGS "-Wl,--push-state,--no-as-needed")
 #set(SPECIAL_POST_FLAGS "-Wl,--pop-state")
-set(SPECIAL_PRE_FLAGS "")
-set(SPECIAL_POST_FLAGS "")
+set(SPECIAL_PRE_FLAGS "-Wl,--no-as-needed")
+set(SPECIAL_POST_FLAGS "-Wl")
+#set(SPECIAL_PRE_FLAGS "")
+#set(SPECIAL_POST_FLAGS "")
 
 
 # I don't know why C bindings had no sources in their library.
