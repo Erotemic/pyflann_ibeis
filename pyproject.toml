@@ -34,7 +34,7 @@ test-command = "python {project}/run_tests.py"
 #CIBW_BEFORE_BUILD_WINDOWS
 
 [tool.cibuildwheel.linux]
-before-all = "yum install mylib"
+before-all = "yum install epel-release lz4 lz4-devel -y"
 
 [tool.cibuildwheel.windows]
 before-all = "choco install lz4 -y"
