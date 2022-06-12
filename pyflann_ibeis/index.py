@@ -146,6 +146,15 @@ class FLANN(object):
         """
         Returns the num_neighbors nearest points in dataset for each point
         in testset.
+
+        Args:
+            pts (numpy.ndarray): database vectors
+            qpts (numpy.ndarray): query vectors
+            num_neighbors (int): number of results
+
+        Returns:
+            Tuple[ndarray, ndarray]:
+                result indexes and distances
         """
 
         if pts.dtype.type not in allowed_types:
