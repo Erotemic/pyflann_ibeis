@@ -17,20 +17,15 @@ jobs:
     strategy:
       matrix:
         #os: [ubuntu-latest]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        arch: [auto]
+        #os: [ubuntu-latest, windows-latest, macOS-latest]
+        #arch: [auto]
         #cibw_build: [cp36*, cp37*, cp38*, cp39*, cp310*]
         ##cibw_skip: ["*-win32 *muslinux*"]
         ## Add additional workers to reduce overall build time
-        #include: 
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp36-manylinux_x86_64"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp37-manylinux_x86_64"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp38-manylinux_x86_64"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp39-manylinux_x86_64"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp36-manylinux_i686"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp37-manylinux_i686"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp38-manylinux_i686"}
-        #  - {"os": "ubuntu-latest", "arch": "x86_64", "cibw_build": "cp39-manylinux_i686"}
+        include: 
+          - {"os": "ubuntu-latest", "arch": "x86_64", "req_cmd": "yum install lz4-devel -y"}
+          - {"os": "macOS-latest", "arch": "x86_64", "req_cmd": "brew install lz4"}
+          #- {"os": "windows-latest", "arch": "x86_64", "req_cmd": ""}
           
         #  - os: windows-latest
         #    cibw_build: cp3*-win32
@@ -89,7 +84,7 @@ jobs:
         CIBW_BUILD: ${{ matrix.cibw_build }}
         CIBW_TEST_REQUIRES: -r requirements/tests.txt
         CIBW_TEST_COMMAND: python {project}/run_tests.py
-        CIBW_BEFORE_ALL_LINUX: "yum install lz4-devel -y"
+        CIBW_BEFORE_ALL_LINUX: ${{ matrix.req_cmd }}
         # configure cibuildwheel to build native archs ('auto'), or emulated ones
         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
 
