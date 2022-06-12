@@ -24,8 +24,8 @@ jobs:
         ## Add additional workers to reduce overall build time
         include: 
           - {"os": "ubuntu-latest", "arch": "x86_64"}
-          - {"os": "macOS-latest", "arch": "x86_64"} 
-          - {"os": "windows-latest", "arch": "x86_64"}
+          #- {"os": "macOS-latest", "arch": "x86_64"} 
+          #- {"os": "windows-latest", "arch": "x86_64"}
           
         #  - os: windows-latest
         #    cibw_build: cp3*-win32
