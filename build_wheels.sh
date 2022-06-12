@@ -16,9 +16,9 @@ SeeAlso:
 #export PIP_GLOBAL_OPTION="-j$(nproc)"
 #export PIP_GLOBAL_OPTION="--global-option=-j4"
 #export PIP_GLOBAL_OPTION=""
+#CIBW_ENVIRONMENT="PIP_GLOBAL_OPTION=$PIP_GLOBAL_OPTION" \
+#CIBW_BEFORE_ALL_LINUX="yum install lz4-devel -y" \
 
-CIBW_ENVIRONMENT="PIP_GLOBAL_OPTION=$PIP_GLOBAL_OPTION" \
-CIBW_BEFORE_ALL_LINUX="yum install lz4-devel -y" \
-    cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
+cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
 
 #cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
