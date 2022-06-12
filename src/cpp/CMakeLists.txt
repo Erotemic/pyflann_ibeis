@@ -16,6 +16,11 @@ file(GLOB_RECURSE C_SOURCES flann.cpp)
 file(GLOB_RECURSE CPP_SOURCES flann_cpp.cpp)
 file(GLOB_RECURSE CU_SOURCES *.cu)
 
+#set(SPECIAL_PRE_FLAGS "-Wl,--push-state,--no-as-needed")
+#set(SPECIAL_POST_FLAGS "-Wl,--pop-state")
+set(SPECIAL_PRE_FLAGS "")
+set(SPECIAL_POST_FLAGS "")
+
 
 # I don't know why C bindings had no sources in their library.
 # Newer cmakes seem to require at least one sourcefile in add_library calls
@@ -62,7 +67,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
     endif()
 else()
     add_library(flann_cpp SHARED ${CPP_SOURCES})
-    target_link_libraries(flann_cpp -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+    target_link_libraries(flann_cpp ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
     # export lz4 headers, so that MSVC to creates flann_cpp.lib
     set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
     if (BUILD_CUDA_LIB)
@@ -96,11 +101,6 @@ if (USE_MPI AND HDF5_IS_PARALLEL AND NOT SKBUILD)
     install (TARGETS flann_mpi_client flann_mpi_server
         DESTINATION bin)
 endif()
-
-#set(SPECIAL_PRE_FLAGS "-Wl,--push-state,--no-as-needed")
-#set(SPECIAL_POST_FLAGS "-Wl,--pop-state")
-set(SPECIAL_PRE_FLAGS "")
-set(SPECIAL_POST_FLAGS "")
 
 
 if (BUILD_C_BINDINGS)
