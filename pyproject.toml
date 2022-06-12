@@ -32,3 +32,12 @@ test-command = "python {project}/run_tests.py"
 #CIBW_BEFORE_BUILD_MACOS
 #CIBW_BEFORE_BUILD_WINDOWS
 #CIBW_BEFORE_BUILD_WINDOWS
+
+[tool.cibuildwheel.linux]
+before-all = "yum install mylib"
+
+[tool.cibuildwheel.windows]
+before-all = "choco install lz4 -y"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install lz4"
