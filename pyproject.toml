@@ -4,6 +4,8 @@ requires = ["setuptools>=41.0.1", "wheel", "scikit-build>=0.9.0", "numpy", "ninj
 
 [tool.cibuildwheel]
 build = "cp37-* cp38-* cp39-* cp310-*"
+#build-frontend = "pip"
+build-frontend = "build"
 #build = "cp310-*"
 skip = "pp* cp27-* cp34-* cp35-* cp36-* *-musllinux_*"
 build-verbosity = 1
@@ -42,5 +44,5 @@ before-all = "choco install lz4 -y"
 [tool.cibuildwheel.macos]
 # https://stackoverflow.com/questions/67486887/how-can-you-search-for-install-and-include-link-c-libraries-on-a-mac
 before-all = "brew install lz4"
-#[tool.cibuildwheel.macos.environment]
-#    CFLAGS ="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"
+[tool.cibuildwheel.macos.environment]
+    CFLAGS="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"
