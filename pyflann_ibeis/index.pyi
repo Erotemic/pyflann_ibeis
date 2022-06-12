@@ -1,6 +1,9 @@
 import numpy
 from numpy import ndarray
 from typing import Tuple
+from os import PathLike
+from typing import Union
+from typing import List
 from typing import Any
 
 index_type: Any
@@ -29,66 +32,66 @@ class FLANN:
            **kwargs) -> Tuple[ndarray, ndarray]:
         ...
 
-    def build_index(self, pts, **kwargs):
+    def build_index(self, pts: ndarray, **kwargs):
         ...
 
-    def save_index(self, filename) -> None:
+    def save_index(self, filename: PathLike) -> None:
         ...
 
-    def load_index(self, filename, pts) -> None:
+    def load_index(self, filename: PathLike, pts: ndarray) -> None:
         ...
 
-    def used_memory(self):
+    def used_memory(self) -> int:
         ...
 
-    def add_points(self, pts, rebuild_threshold: float = ...) -> None:
+    def add_points(self, pts: ndarray, rebuild_threshold: float = 2.0) -> None:
         ...
 
-    def remove_point(self, idx) -> None:
+    def remove_point(self, idx: int) -> None:
         ...
 
-    def nn_index(self, qpts, num_neighbors: int = ..., **kwargs):
+    def nn_index(self, qpts: ndarray, num_neighbors: int = 1, **kwargs):
         ...
 
-    def nn_radius(self, query, radius, **kwargs):
+    def nn_radius(self, query: ndarray, radius: float, **kwargs):
         ...
 
     def delete_index(self, **kwargs) -> None:
         ...
 
     def kmeans(self,
-               pts,
-               num_clusters,
-               max_iterations: Any | None = ...,
-               dtype: Any | None = ...,
+               pts: numpy.ndarray,
+               num_clusters: int,
+               max_iterations: Union[int, None] = None,
+               dtype: Union[type, None] = None,
                **kwargs):
         ...
 
     def hierarchical_kmeans(self,
-                            pts,
-                            branch_size,
-                            num_branches,
-                            max_iterations: Any | None = ...,
-                            dtype: Any | None = ...,
+                            pts: numpy.ndarray,
+                            branch_size: int,
+                            num_branches: int,
+                            max_iterations: Union[int, None] = None,
+                            dtype: Union[type, None] = None,
                             **kwargs):
         ...
 
     @property
-    def shape(self):
+    def shape(self) -> Tuple:
         ...
 
     @property
-    def __len__(self):
+    def __len__(self) -> int:
         ...
 
-    def get_indexed_shape(self):
+    def get_indexed_shape(self) -> Tuple[int, int]:
         ...
 
-    def get_indexed_data(self):
+    def get_indexed_data(self) -> Tuple[ndarray, ndarray]:
         ...
 
-    def used_memory_dataset(self):
+    def used_memory_dataset(self) -> int:
         ...
 
-    def remove_points(self, idxs) -> None:
+    def remove_points(self, idxs: List[int]) -> None:
         ...

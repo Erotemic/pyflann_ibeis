@@ -57,7 +57,7 @@ flann: Any
 type_mappings: Any
 
 
-def define_functions(str) -> None:
+def define_functions(text: str):
     ...
 
 

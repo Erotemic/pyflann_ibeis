@@ -235,9 +235,9 @@ type_mappings = ( ('float', 'float32'),
                   ('int', 'int32') )
 
 
-def define_functions(str):
+def define_functions(text: str):
     for type in type_mappings:
-        eval(compile(str % {'C': type[0], 'numpy': type[1]}, '<string>', 'exec'))
+        eval(compile(text % {'C': type[0], 'numpy': type[1]}, '<string>', 'exec'))
 
 # flann.build_index = {}
 define_functions(r"""
