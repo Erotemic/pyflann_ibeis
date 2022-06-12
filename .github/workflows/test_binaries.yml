@@ -1,5 +1,6 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# cat ~/code/pyflann_ibeis/.github/workflows/test_binaries.yml | yq
 
 name: TestBinaries
 
@@ -7,8 +8,6 @@ on:
   push:
   pull_request:
     branches: [ main ]
-
-jobs:
 
 jobs:
 
