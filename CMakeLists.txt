@@ -156,7 +156,7 @@ if (APPLE)
   # Hack for CI
   # https://stackoverflow.com/questions/67486887/how-can-you-search-for-install-and-include-link-c-libraries-on-a-mac
   include_directories("/usr/local/include")
-  include_directories("/opt/homebrew/lib")
+  #include_directories("/opt/homebrew/lib")
 endif (APPLE)
 
 find_package(PkgConfig REQUIRED)

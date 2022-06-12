@@ -43,6 +43,9 @@ before-all = "choco install lz4 -y"
 
 [tool.cibuildwheel.macos]
 # https://stackoverflow.com/questions/67486887/how-can-you-search-for-install-and-include-link-c-libraries-on-a-mac
-before-all = "brew install lz4"
+before-all = "brew install lz4 &&  set -x && (ls /opt/homebrew || true) && (ls /opt/homebrew/lib || true) &&  (ls /usr/local/include || true)  &&  (ls /usr/local/lib || true) && set +x"
 [tool.cibuildwheel.macos.environment]
     CFLAGS="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"
+
+
+
