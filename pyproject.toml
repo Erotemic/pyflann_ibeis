@@ -40,7 +40,7 @@ before-all = "yum install epel-release lz4 lz4-devel -y"
 before-all = "choco install lz4 -y"
 
 [tool.cibuildwheel.macos]
+# https://stackoverflow.com/questions/67486887/how-can-you-search-for-install-and-include-link-c-libraries-on-a-mac
 before-all = "brew install lz4"
-
-    [tool.cibuildwheel.macos.environment]
-        CFLAGS ="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"
+#[tool.cibuildwheel.macos.environment]
+#    CFLAGS ="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"

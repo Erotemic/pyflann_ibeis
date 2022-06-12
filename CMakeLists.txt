@@ -152,6 +152,13 @@ if (BUILD_CUDA_LIB)
     endif(CUDA_FOUND)
 endif(BUILD_CUDA_LIB)
 
+if (APPLE)
+  # Hack for CI
+  # https://stackoverflow.com/questions/67486887/how-can-you-search-for-install-and-include-link-c-libraries-on-a-mac
+  include_directories("/usr/local/include")
+  include_directories("/opt/homebrew/lib")
+endif (APPLE)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LZ4 REQUIRED liblz4)
 
