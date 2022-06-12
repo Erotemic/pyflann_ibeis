@@ -33,6 +33,9 @@ set(FAKE_CU_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 set(FAKE_CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 
 add_library(flann_cpp_s STATIC ${CPP_SOURCES})
+
+message(STATUS "LZ4_LIBRARIES = ${LZ4_LIBRARIES}")
+
 target_link_libraries(flann_cpp_s ${LZ4_LIBRARIES})
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
     set_target_properties(flann_cpp_s PROPERTIES COMPILE_FLAGS -fPIC)
