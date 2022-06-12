@@ -41,3 +41,6 @@ before-all = "choco install lz4 -y"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install lz4"
+
+    [tool.cibuildwheel.macos.environment]
+        CFLAGS ="-I /opt/homebrew/include -L /opt/homebrew/lib -llz4"
