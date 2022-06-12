@@ -16,7 +16,7 @@ def main():
     os.chdir(ROOT)
 
     NAME = 'pyflann_ibeis'
-    VERSION = '0.1.2'
+    VERSION = '2.2.0'
     DOCKER_TAG = '{}-{}'.format(NAME, VERSION )
 
     QUAY_REPO = 'quay.io/erotemic/manylinux-for'
@@ -29,12 +29,13 @@ def main():
     # But the goal is to get at least one OS working end-to-end.
     """
     Notes:
-        docker run --rm -it quay.io/pypa/manylinux2010_x86_64 /bin/bash
+        docker run --rm -it quay.io/pypa/manylinux2014_x86_64 /bin/bash
         ---
         ls /opt/python
     """
 
-    BASE_IMAGE = 'quay.io/pypa/manylinux2010_x86_64'
+    # BASE_IMAGE = 'quay.io/pypa/manylinux2010_x86_64'
+    BASE_IMAGE = 'quay.io/pypa/manylinux2014_x86_64'
 
     docker_code = ub.codeblock(
         f'''
@@ -61,6 +62,7 @@ def main():
             /opt/python/{tag}/bin/python -m pip install setuptools pip virtualenv -U && \
             /opt/python/{tag}/bin/python -m virtualenv ./venv-{tag} && \
             source ./venv-{tag}/bin/activate && \
+            pip install pip -U && \
             pip install scikit-build cmake ninja
             '''))
     docker_code += '\n' + '\n\n'.join([*pyinstall_cmds])
@@ -153,10 +155,10 @@ def main():
 
         # Login to a docker registry (we are using quay)
 
-        # In some cases this works,
-        docker login
+        # In some cases this works, but...
+        # docker login
 
-        # But you may need to specify secret credentials
+        # You may need to specify secret credentials
         load_secrets
         echo "QUAY_USERNAME = $QUAY_USERNAME"
         docker login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io
