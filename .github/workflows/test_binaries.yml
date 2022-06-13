@@ -170,6 +170,7 @@ jobs:
           $GPG_EXECUTABLE --list-keys || true
           $GPG_EXECUTABLE --list-keys  || echo "first invocation of gpg creates directories and returns 1"
           $GPG_EXECUTABLE --list-keys  
+          pip install scikit-build
           VERSION=$(python -c "import setup; print(setup.VERSION)") 
           pip install twine
           pip install six pyopenssl ndg-httpsclient pyasn1 -U --user
@@ -229,6 +230,7 @@ jobs:
           echo "Finish Decrypt Keys"
           $GPG_EXECUTABLE --list-keys  || echo "first invocation of gpg creates directories and returns 1"
           $GPG_EXECUTABLE --list-keys  
+          pip install scikit-build
           VERSION=$(python -c "import setup; print(setup.VERSION)") 
           pip install twine
           pip install six pyopenssl ndg-httpsclient pyasn1 -U --user
