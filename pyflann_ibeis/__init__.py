@@ -32,7 +32,7 @@
 mkinit pyflann_ibeis
 """
 
-__version__ = '2.0.0'
+__version__ = '2.2.0'
 
 
 from pyflann_ibeis import exceptions

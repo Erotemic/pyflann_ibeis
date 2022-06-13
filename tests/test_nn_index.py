@@ -83,7 +83,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
 
 if __name__ == '__main__':
     """
-    pytest ~/code/flann/test/test_nn_index.py
-    xdoctest ~/code/flann/test/test_nn_index.py zero
+    pytest ~/code/flann/tests/test_nn_index.py
+    xdoctest ~/code/flann/tests/test_nn_index.py zero
     """
     unittest.main()

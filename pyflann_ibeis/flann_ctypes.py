@@ -30,6 +30,7 @@ from ctypes import (Structure, c_char_p, c_int, c_float, c_uint, c_long,
 from numpy.ctypeslib import ndpointer
 import os
 import sys
+from typing import Callable, Dict, Any
 
 STRING = c_char_p
 
@@ -40,8 +41,8 @@ class CustomStructure(Structure):
         class by adding custom default values to the fields and a way of translating
         field types.
     """
-    _defaults_ = {}
-    _translation_ = {}
+    _defaults_: dict = {}
+    _translation_: dict = {}
 
     def __init__(self):
         Structure.__init__(self)
@@ -143,6 +144,10 @@ FLANN_INDEX = c_void_p
 
 
 def load_flann_library():
+    """
+    Returns:
+        Tuple[ModuleType, PathLike]
+    """
 
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -187,7 +192,7 @@ def load_flann_library():
         except Exception:
             pass
 
-    print('attempts = '.format('\n'.join(attempts)))
+    print('attempts = {}'.format('\n'.join(attempts)))
     raise ImportError('Failed to load dynamic library. Did you compile FLANN?')
 
     return None, None
@@ -198,7 +203,16 @@ if flannlib is None:
 
 
 class FlannLib(object):
-    pass
+    build_index : Dict[Any, Callable] = {}
+    save_index : Dict[Any, Callable] = {}
+    load_index : Dict[Any, Callable] = {}
+    used_memory : Dict[Any, Callable] = {}
+    add_points : Dict[Any, Callable] = {}
+    remove_point : Dict[Any, Callable] = {}
+    find_nearest_neighbors : Dict[Any, Callable] = {}
+    find_nearest_neighbors_index : Dict[Any, Callable] = {}
+    radius_search : Dict[Any, Callable] = {}
+    compute_cluster_centers : Dict[Any, Callable] = {}
 
 flann = FlannLib()
 
@@ -221,11 +235,11 @@ type_mappings = ( ('float', 'float32'),
                   ('int', 'int32') )
 
 
-def define_functions(str):
+def define_functions(text: str):
     for type in type_mappings:
-        eval(compile(str % {'C': type[0], 'numpy': type[1]}, '<string>', 'exec'))
+        eval(compile(text % {'C': type[0], 'numpy': type[1]}, '<string>', 'exec'))
 
-flann.build_index = {}
+# flann.build_index = {}
 define_functions(r"""
 flannlib.flann_build_index_%(C)s.restype = FLANN_INDEX
 flannlib.flann_build_index_%(C)s.argtypes = [
@@ -238,7 +252,7 @@ flannlib.flann_build_index_%(C)s.argtypes = [
 flann.build_index[%(numpy)s] = flannlib.flann_build_index_%(C)s
 """)
 
-flann.save_index = {}
+# flann.save_index = {}
 define_functions(r"""
 flannlib.flann_save_index_%(C)s.restype = None
 flannlib.flann_save_index_%(C)s.argtypes = [
@@ -248,7 +262,7 @@ flannlib.flann_save_index_%(C)s.argtypes = [
 flann.save_index[%(numpy)s] = flannlib.flann_save_index_%(C)s
 """)
 
-flann.load_index = {}
+# flann.load_index = {}
 define_functions(r"""
 flannlib.flann_load_index_%(C)s.restype = FLANN_INDEX
 flannlib.flann_load_index_%(C)s.argtypes = [
@@ -260,7 +274,7 @@ flannlib.flann_load_index_%(C)s.argtypes = [
 flann.load_index[%(numpy)s] = flannlib.flann_load_index_%(C)s
 """)
 
-flann.used_memory = {}
+# flann.used_memory = {}
 define_functions(r"""
 flannlib.flann_used_memory_%(C)s.restype = c_int
 flannlib.flann_used_memory_%(C)s.argtypes = [
@@ -269,7 +283,7 @@ flannlib.flann_used_memory_%(C)s.argtypes = [
 flann.used_memory[%(numpy)s] = flannlib.flann_used_memory_%(C)s
 """)
 
-flann.add_points = {}
+# flann.add_points = {}
 define_functions(r"""
 flannlib.flann_add_points_%(C)s.restype = None
 flannlib.flann_add_points_%(C)s.argtypes = [
@@ -282,7 +296,7 @@ flannlib.flann_add_points_%(C)s.argtypes = [
 flann.add_points[%(numpy)s] = flannlib.flann_add_points_%(C)s
 """)
 
-flann.remove_point = {}
+# flann.remove_point = {}
 define_functions(r"""
 flannlib.flann_remove_point_%(C)s.restype = None
 flannlib.flann_remove_point_%(C)s.argtypes = [
@@ -292,7 +306,7 @@ flannlib.flann_remove_point_%(C)s.argtypes = [
 flann.remove_point[%(numpy)s] = flannlib.flann_remove_point_%(C)s
 """)
 
-flann.find_nearest_neighbors = {}
+# flann.find_nearest_neighbors = {}
 define_functions(r"""
 flannlib.flann_find_nearest_neighbors_%(C)s.restype = c_int
 flannlib.flann_find_nearest_neighbors_%(C)s.argtypes = [
@@ -326,7 +340,7 @@ flannlib.flann_find_nearest_neighbors_double.argtypes = [
 flann.find_nearest_neighbors[float64] = flannlib.flann_find_nearest_neighbors_double
 
 
-flann.find_nearest_neighbors_index = {}
+# flann.find_nearest_neighbors_index = {}
 define_functions(r"""
 flannlib.flann_find_nearest_neighbors_index_%(C)s.restype = c_int
 flannlib.flann_find_nearest_neighbors_index_%(C)s.argtypes = [
@@ -353,7 +367,6 @@ flannlib.flann_find_nearest_neighbors_index_double.argtypes = [
 ]
 flann.find_nearest_neighbors_index[float64] = flannlib.flann_find_nearest_neighbors_index_double
 
-flann.radius_search = {}
 define_functions(r"""
 flannlib.flann_radius_search_%(C)s.restype = c_int
 flannlib.flann_radius_search_%(C)s.argtypes = [
@@ -381,7 +394,6 @@ flannlib.flann_radius_search_double.argtypes = [
 flann.radius_search[float64] = flannlib.flann_radius_search_double
 
 
-flann.compute_cluster_centers = {}
 define_functions(r"""
 flannlib.flann_compute_cluster_centers_%(C)s.restype = c_int
 flannlib.flann_compute_cluster_centers_%(C)s.argtypes = [
@@ -419,6 +431,15 @@ flann.free_index[%(numpy)s] = flannlib.flann_free_index_%(C)s
 
 
 def ensure_2d_array(arr, flags, **kwargs):
+    """
+    Args:
+        arr (ndarray):
+        flags (Any):
+        **kwargs: passed to numpy.require
+
+    Returns:
+        ndarray
+    """
     arr = require(arr, requirements=flags, **kwargs)
     if len(arr.shape) == 1:
         arr = arr.reshape(-1, arr.size)

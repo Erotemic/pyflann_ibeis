@@ -16,6 +16,13 @@ file(GLOB_RECURSE C_SOURCES flann.cpp)
 file(GLOB_RECURSE CPP_SOURCES flann_cpp.cpp)
 file(GLOB_RECURSE CU_SOURCES *.cu)
 
+#set(SPECIAL_PRE_FLAGS "-Wl,--push-state,--no-as-needed")
+#set(SPECIAL_POST_FLAGS "-Wl,--pop-state")
+#set(SPECIAL_PRE_FLAGS "-Wl,--no-as-needed")
+#set(SPECIAL_POST_FLAGS "-Wl")
+set(SPECIAL_PRE_FLAGS "")
+set(SPECIAL_POST_FLAGS "")
+
 
 # I don't know why C bindings had no sources in their library.
 # Newer cmakes seem to require at least one sourcefile in add_library calls
@@ -28,6 +35,9 @@ set(FAKE_CU_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 set(FAKE_CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 
 add_library(flann_cpp_s STATIC ${CPP_SOURCES})
+
+message(STATUS "LZ4_LIBRARIES = ${LZ4_LIBRARIES}")
+
 target_link_libraries(flann_cpp_s ${LZ4_LIBRARIES})
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
     set_target_properties(flann_cpp_s PROPERTIES COMPILE_FLAGS -fPIC)
@@ -62,7 +72,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
     endif()
 else()
     add_library(flann_cpp SHARED ${CPP_SOURCES})
-    target_link_libraries(flann_cpp -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+    target_link_libraries(flann_cpp ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
     # export lz4 headers, so that MSVC to creates flann_cpp.lib
     set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
     if (BUILD_CUDA_LIB)
@@ -100,7 +110,7 @@ endif()
 
 if (BUILD_C_BINDINGS)
     add_library(flann_s STATIC ${C_SOURCES})
-    target_link_libraries(flann_s -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+    target_link_libraries(flann_s ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
     if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
         set_target_properties(flann_s PROPERTIES COMPILE_FLAGS -fPIC)
     endif()
@@ -112,7 +122,7 @@ if (BUILD_C_BINDINGS)
         target_link_libraries(flann -Wl,-whole-archive flann_s -Wl,-no-whole-archive)
     else()
         add_library(flann SHARED ${C_SOURCES})
-        target_link_libraries(flann -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+        target_link_libraries(flann ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
 
         if(MINGW AND OPENMP_FOUND)
           target_link_libraries(flann gomp)
