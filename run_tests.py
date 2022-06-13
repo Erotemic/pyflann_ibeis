@@ -130,4 +130,3 @@ if __name__ == '__main__':
             # for CIBW under linux
             copy_coverage_cibuildwheel_docker(f'/home/runner/work/{package_name}/{package_name}')
         print('Restoring cwd = {!r}'.format(cwd))
-n

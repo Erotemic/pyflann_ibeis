@@ -75,7 +75,8 @@ Notes:
 
     Based on template in
 
-    ~/misc/templates/PYPKG/publish.sh
+    # github.com/Erotemic/xcookie/
+    ~/code/xcookie/publish.sh
 
 Usage:
     load_secrets

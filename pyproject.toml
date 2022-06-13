@@ -9,6 +9,11 @@ build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
 
+[tool.xcookie]
+tags = [ "erotemic", "github", "binpy",]
+mod_name = "pyflann_ibeis"
+repo_name = "pyflann_ibeis"
+
 [tool.cibuildwheel.linux]
 before-all = "yum install epel-release lz4 lz4-devel -y"
 
