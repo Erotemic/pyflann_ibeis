@@ -1,8 +1,8 @@
 #!/bin/bash
 __doc__="""
 SeeAlso:
-    ~/code/pyflann_ibeis/pyproject.toml
-    python ~/misc/templates/pyflann_ibeis/build_wheels.sh
-    ~/code/pyflann_ibeis/dev/docker/make_base_image.py 
+    pyproject.toml
 """
-cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
+#pip wheel -w wheelhouse .
+# python -m build --wheel -o wheelhouse  #  pyflann_ibeis: +COMMENT_IF(binpy)
+cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64  #  pyflann_ibeis: +UNCOMMENT_IF(binpy)

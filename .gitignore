@@ -22,3 +22,6 @@ wheelhouse
 .coverage
 pyflann_ibeis.egg-info/
 tests/coverage.xml
+pyflann_ibeis/lib/*.so
+pyflann_ibeis/lib/*.so.*
+pyflann_ibeis/lib/*.a
