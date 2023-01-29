@@ -1,7 +1,5 @@
 |GithubActions| |ReadTheDocs| |Pypi| |Downloads| |Codecov| 
 
-..|CircleCI||Travis||Appveyor| 
-
 
 This is a Fork of the FLANN repo, under a different name for use in the IBEIS
 project. The main difference is that it has a few more helper function calls
@@ -48,17 +46,17 @@ Please report bugs or feature requests using [github's issue tracker](http://git
 
 .. |CircleCI| image:: https://circleci.com/gh/Erotemic/pyflann_ibeis.svg?style=svg
     :target: https://circleci.com/gh/Erotemic/pyflann_ibeis
-.. |Travis| image:: https://img.shields.io/travis/Erotemic/pyflann_ibeis/master.svg?label=Travis%20CI
-   :target: https://travis-ci.org/Erotemic/pyflann_ibeis?branch=master
-.. |Appveyor| image:: https://ci.appveyor.com/api/projects/status/github/Erotemic/pyflann_ibeis?branch=master&svg=True
-   :target: https://ci.appveyor.com/project/Erotemic/pyflann_ibeis/branch/master
-.. |Codecov| image:: https://codecov.io/github/Erotemic/pyflann_ibeis/badge.svg?branch=master&service=github
-   :target: https://codecov.io/github/Erotemic/pyflann_ibeis?branch=master
+.. |Travis| image:: https://img.shields.io/travis/Erotemic/pyflann_ibeis/main.svg?label=Travis%20CI
+   :target: https://travis-ci.org/Erotemic/pyflann_ibeis?branch=main
+.. |Appveyor| image:: https://ci.appveyor.com/api/projects/status/github/Erotemic/pyflann_ibeis?branch=main&svg=True
+   :target: https://ci.appveyor.com/project/Erotemic/pyflann_ibeis/branch/main
+.. |Codecov| image:: https://codecov.io/github/Erotemic/pyflann_ibeis/badge.svg?branch=main&service=github
+   :target: https://codecov.io/github/Erotemic/pyflann_ibeis?branch=main
 .. |Pypi| image:: https://img.shields.io/pypi/v/pyflann_ibeis.svg
    :target: https://pypi.python.org/pypi/pyflann_ibeis
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyflann_ibeis.svg
    :target: https://pypistats.org/packages/pyflann_ibeis
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/pyflann_ibeis/badge/?version=latest
     :target: http://pyflann_ibeis.readthedocs.io/en/latest/
-.. |GithubActions| image:: https://github.com/Erotemic/pyflann_ibeis/actions/workflows/tests.yml/badge.svg?branch=main
+.. |GithubActions| image:: https://github.com/Erotemic/pyflann_ibeis/actions/workflows/test_binaries.yml/badge.svg?branch=main
     :target: https://github.com/Erotemic/pyflann_ibeis/actions?query=branch%3Amain
