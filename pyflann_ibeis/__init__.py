@@ -32,7 +32,7 @@
 mkinit pyflann_ibeis
 """
 
-__version__ = '2.2.0'
+__version__ = '2.3.0'
 __author__ = 'Jon Crall'
 __author_email__ = 'erotemic@gmail.com'
 __url__ = 'https://github.com/Erotemic/pyflan_ibeis'
