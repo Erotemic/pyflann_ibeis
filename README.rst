@@ -1,7 +1,5 @@
 |GithubActions| |ReadTheDocs| |Pypi| |Downloads| |Codecov| 
 
-.. |CircleCI||Travis||Appveyor| 
-
 
 This is a Fork of the FLANN repo, under a different name for use in the IBEIS
 project. The main difference is that it has a few more helper function calls
