@@ -24,7 +24,7 @@
 #(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__version__ = '2.3.1'
+__version__ = '2.4.0'
 __author__ = 'Marius Muja, David G. Lowe, Jon Crall'
 __author_email__ = 'erotemic@gmail.com'
 __url__ = 'https://github.com/Erotemic/pyflann_ibeis'
