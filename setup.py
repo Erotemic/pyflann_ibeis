@@ -188,6 +188,30 @@ LICENSE = 'BSD'
 DESCRIPTION = 'FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors'
 
 
+setupkw = {}
+setupkw["install_requires"] = parse_requirements(
+    "requirements/runtime.txt", versions="loose"
+)
+setupkw["extras_require"] = {
+    "all": parse_requirements("requirements.txt", versions="loose"),
+    "runtime": parse_requirements("requirements/runtime.txt", versions="loose"),
+    "tests": parse_requirements("requirements/tests.txt", versions="loose"),
+    "optional": parse_requirements("requirements/optional.txt", versions="loose"),
+    "build": parse_requirements("requirements/build.txt", versions="loose"),
+    "docs": parse_requirements("requirements/docs.txt", versions="loose"),
+    "all-strict": parse_requirements("requirements.txt", versions="strict"),
+    "runtime-strict": parse_requirements(
+        "requirements/runtime.txt", versions="strict"
+    ),
+    "tests-strict": parse_requirements("requirements/tests.txt", versions="strict"),
+    "optional-strict": parse_requirements(
+        "requirements/optional.txt", versions="strict"
+    ),
+    "build-strict": parse_requirements("requirements/build.txt", versions="strict"),
+    "docs-strict": parse_requirements("requirements/docs.txt", versions="strict"),
+}
+
+
 KWARGS = OrderedDict(
     name=NAME,
     version=VERSION,
@@ -198,13 +222,7 @@ KWARGS = OrderedDict(
     long_description_content_type='text/x-rst',
     url=URL,
     license=LICENSE,
-    install_requires=parse_requirements('requirements/runtime.txt'),
-    extras_require={
-        'all': parse_requirements('requirements.txt'),
-        'tests': parse_requirements('requirements/tests.txt'),
-        'build': parse_requirements('requirements/build.txt'),
-        'runtime': parse_requirements('requirements/runtime.txt'),
-    },
+    **setupkw,
 
     # --- PACKAGES ---
     # The combination of packages and package_dir is how scikit-build will
