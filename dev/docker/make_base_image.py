@@ -52,6 +52,8 @@ def main():
         'cp38-cp38',
         'cp39-cp39',
         'cp310-cp310',
+        'cp311-cp311',
+        'cp312-cp312',
     ]
 
     pyinstall_cmds = []
