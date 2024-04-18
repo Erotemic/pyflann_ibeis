@@ -2,16 +2,19 @@
 requires = [ "setuptools>=41.0.1", "wheel", "scikit-build>=0.9.0", "numpy", "ninja", "cmake"]
 
 [tool.cibuildwheel]
-build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
+#build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
+build = "cp312-*"
 build-frontend = "build"
 skip = "pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*"
 build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
 
-# See: ~/code/vtool_ibeis_ext/dev/build_base_docker2.py
-manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
-manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
+before-all = "yum update -y && yum install lz4-devel -y"
+
+# See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
+#manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
+#manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.xcookie]
 tags = [ "erotemic", "github", "binpy",]
