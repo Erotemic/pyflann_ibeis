@@ -120,18 +120,13 @@ jobs:
         # explicitly here.
         os:
         - ubuntu-latest
-        - macOS-latest
-        - windows-latest
         cibw_skip:
-        - '*-win32 pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*'
+        - pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*
         arch:
         - auto
     steps:
     - name: Checkout source
       uses: actions/checkout@v4.1.1
-    - name: Enable MSVC 64bit
-      uses: ilammy/msvc-dev-cmd@v1
-      if: matrix.os == 'windows-latest' && ${{ contains(matrix.cibw_skip, '*-win32') }}
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       if: runner.os == 'Linux' && matrix.arch != 'auto'
@@ -199,112 +194,37 @@ jobs:
           install-extras: tests-strict,runtime-strict
           os: ubuntu-latest
           arch: auto
-        - python-version: '3.7'
-          install-extras: tests-strict,runtime-strict
-          os: macOS-latest
-          arch: auto
-        - python-version: '3.7'
-          install-extras: tests-strict,runtime-strict
-          os: windows-latest
-          arch: auto
         - python-version: '3.12'
           install-extras: tests-strict,runtime-strict,optional-strict
           os: ubuntu-latest
           arch: auto
-        - python-version: '3.12'
-          install-extras: tests-strict,runtime-strict,optional-strict
-          os: macOS-latest
-          arch: auto
-        - python-version: '3.12'
-          install-extras: tests-strict,runtime-strict,optional-strict
-          os: windows-latest
-          arch: auto
-        - python-version: '3.12'
-          install-extras: tests
-          os: windows-latest
-          arch: auto
-        - python-version: '3.12'
-          install-extras: tests
-          os: windows-latest
-          arch: auto
         - python-version: '3.7'
           install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
         - python-version: '3.8'
           install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
         - python-version: '3.9'
           install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
         - python-version: '3.10'
           install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
         - python-version: '3.11'
           install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
         - python-version: '3.12'
           install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.7'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.8'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.9'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.10'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.11'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.12'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.7'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.8'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.9'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.10'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.11'
-          install-extras: tests,optional
-          os: windows-latest
-          arch: auto
-        - python-version: '3.12'
-          install-extras: tests,optional
-          os: windows-latest
+          os: ubuntu-latest
           arch: auto
     steps:
     - name: Checkout source
       uses: actions/checkout@v4.1.1
-    - name: Enable MSVC 64bit
-      uses: ilammy/msvc-dev-cmd@v1
-      if: matrix.os == 'windows-latest'
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       if: runner.os == 'Linux' && matrix.arch != 'auto'

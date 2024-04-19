@@ -6,7 +6,6 @@ requires = [ "setuptools>=41.0.1", "wheel", "scikit-build>=0.9.0", "numpy", "nin
 build = "cp312-*"
 build-frontend = "build"
 skip = "pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*"
-os = [ "linux" ]
 build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
@@ -20,6 +19,7 @@ test-command = "python {project}/run_tests.py"
 tags = [ "erotemic", "github", "binpy",]
 mod_name = "pyflann_ibeis"
 repo_name = "pyflann_ibeis"
+os = [ "linux" ]
 
 [tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"
