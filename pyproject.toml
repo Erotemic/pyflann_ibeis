@@ -11,7 +11,6 @@ build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
 
-before-all = "yum update -y && yum install lz4-devel -y"
 
 # See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
 #manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
@@ -22,8 +21,9 @@ tags = [ "erotemic", "github", "binpy",]
 mod_name = "pyflann_ibeis"
 repo_name = "pyflann_ibeis"
 
-#[tool.cibuildwheel.linux]
+[tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"
+before-all = "yum update -y && yum install lz4-devel -y"
 
 #[tool.cibuildwheel.windows]
 #before-all = "choco install lz4 -y"
