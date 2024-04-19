@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - name: Set up Python 3.12 for linting
       uses: actions/setup-python@v5.0.0
       with:
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - name: Set up Python 3.12
       uses: actions/setup-python@v5.0.0
       with:
@@ -127,7 +127,7 @@ jobs:
         - auto
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       if: runner.os == 'Linux' && matrix.arch != 'auto'
@@ -221,7 +221,7 @@ jobs:
           arch: auto
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       if: runner.os == 'Linux' && matrix.arch != 'auto'
@@ -313,7 +313,7 @@ jobs:
     - build_binpy_wheels
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - uses: actions/download-artifact@v2.1.1
       name: Download wheels
       with:
@@ -387,7 +387,7 @@ jobs:
     - build_binpy_wheels
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - uses: actions/download-artifact@v2.1.1
       name: Download wheels
       with:
@@ -462,7 +462,7 @@ jobs:
     - live_deploy
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4.1.3
     - uses: actions/download-artifact@v2.1.1
       name: Download artifacts
       with:
