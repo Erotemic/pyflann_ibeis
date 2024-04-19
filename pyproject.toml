@@ -8,6 +8,11 @@ repo_name = "pyflann_ibeis"
 os = [ "linux" ]
 url = "https://github.com/Erotemic/pyflann_ibeis"
 description = "pyflann fork for IBEIS"
+author = ['Jon Crall', 'Marius Muja']
+author_email="erotemic@gmail.com"
+min_python = 3.8
+license = "BSD"
+dev_status = "stable"
 
 [tool.cibuildwheel]
 build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
@@ -17,11 +22,6 @@ skip = "pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*"
 build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
-author = ['Jon Crall', 'Marius Muja']
-author_email="erotemic@gmail.com"
-min_python = 3.8
-license = "BSD"
-dev_status = "stable"
 
 
 # See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
