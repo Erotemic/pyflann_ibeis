@@ -79,8 +79,9 @@ class Test_PyFLANN_nn(unittest.TestCase):
         query points.  Each point should be closest to itself.
         """
         np.random.seed(0)
-        x = np.array(np.random.rand(N, dim), dtype=type)
-        perm = np.random.permutation(N)
+        rng = np.random.RandomState(0)
+        x = np.array(rng.rand(N, dim), dtype=type)
+        perm = rng.permutation(N)
 
         idx, dists = self.nn.nn(x, x[perm], **kwargs)
         self.assertTrue(all(idx == perm))
@@ -100,8 +101,8 @@ class Test_PyFLANN_nn(unittest.TestCase):
                         'failed #1: N=%d,correctness=%f' % (N, correctness / N))
 
         # now what happens if they are slightly off
-        x_mult_nn += np.random.randn(x_mult_nn.shape[0],
-                                     x_mult_nn.shape[1]) * 0.0001 / dim
+        x_mult_nn += rng.randn(x_mult_nn.shape[0],
+                               x_mult_nn.shape[1]) * 0.0001 / dim
         n2idx, n2dists = self.nn.nn(
             x_mult_nn, x, num_neighbors=num_neighbors, **kwargs)
 

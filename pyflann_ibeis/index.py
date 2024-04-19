@@ -78,8 +78,9 @@ class FLANN(object):
     Example:
         >>> from pyflann_ibeis import FLANN
         >>> import numpy as np
-        >>> dvecs = np.random.rand(1000, 128)
-        >>> qvecs = np.random.rand(10, 128)
+        >>> rng = np.random.RandomState(0)
+        >>> dvecs = rng.rand(1000, 128)
+        >>> qvecs = rng.rand(10, 128)
         >>> flann = FLANN()
         >>> params = flann.build_index(dvecs)
         >>> # xdoctest: +IGNORE_WANT

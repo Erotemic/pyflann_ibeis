@@ -40,7 +40,9 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
         x = [rand(N, dim) for i in range(numtests)]
         correct = ones(numtests, dtype=np.bool_)
 
-        for i in np.random.permutation(numtests):
+        rng = np.random.RandomState(0)
+
+        for i in rng.permutation(numtests):
             nns[i] = pyflann_ibeis.FLANN()
             nns[i].build_index(x[i])
 
@@ -50,7 +52,7 @@ class Test_PyFLANN_nn_index(unittest.TestCase):
             if rand() < 0.5:
                 nns[i].nn(x[i], x[i])
 
-        for i in np.random.permutation(numtests):
+        for i in rng.permutation(numtests):
             nnidx, nndist = nns[i].nn_index(x[i])
             correct[i] = all(nnidx == np.arange(N, dtype=pyflann_ibeis.index_type))
 
