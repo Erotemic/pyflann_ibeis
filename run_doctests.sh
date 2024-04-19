@@ -1,2 +1,2 @@
-#!/bin/bash
-xdoctest pyflann_ibeis --style=google all
+#!/usr/bin/env bash
+xdoctest pyflann_ibeis --style=google all "$@"

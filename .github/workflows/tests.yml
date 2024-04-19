@@ -1,0 +1,519 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# Based on ~/code/xcookie/xcookie/rc/tests.yml.in
+# Now based on ~/code/xcookie/xcookie/builders/github_actions.py
+# See: https://github.com/Erotemic/xcookie
+
+name: BinPyCI
+
+on:
+  push:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint_job:
+    ##
+    # Run quick linting and typing checks.
+    # To disable all linting add "linter=false" to the xcookie config.
+    # To disable type checks add "notypes" to the xcookie tags.
+    ##
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - name: Set up Python 3.12 for linting
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |-
+        python -m pip install --upgrade pip
+        python -m pip install flake8
+    - name: Lint with flake8
+      run: |-
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 ./pyflann_ibeis --count --select=E9,F63,F7,F82 --show-source --statistics
+    - name: Typecheck with mypy
+      run: |-
+        python -m pip install mypy
+        pip install -r requirements/runtime.txt
+        mypy --install-types --non-interactive ./pyflann_ibeis
+        mypy ./pyflann_ibeis
+  build_and_test_sdist:
+    ##
+    # Build the binary package from source and test it in the same
+    # environment.
+    ##
+    name: Build sdist
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.12'
+    - name: Upgrade pip
+      run: |-
+        python -m pip install --upgrade pip
+        python -m pip install --prefer-binary -r requirements/tests.txt
+        python -m pip install --prefer-binary -r requirements/runtime.txt
+    - name: Build sdist
+      shell: bash
+      run: |-
+        python -m pip install pip -U
+        python -m pip install setuptools>=0.8 wheel build
+        python -m build --sdist --outdir wheelhouse
+    - name: Install sdist
+      run: |-
+        ls -al wheelhouse
+        pip install --prefer-binary wheelhouse/pyflann_ibeis*.tar.gz -v
+    - name: Test minimal loose sdist
+      run: |-
+        pwd
+        ls -al
+        # Run in a sandboxed directory
+        WORKSPACE_DNAME="testsrcdir_minimal_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
+        mkdir -p $WORKSPACE_DNAME
+        cd $WORKSPACE_DNAME
+        # Run the tests
+        # Get path to installed package
+        MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
+        echo "MOD_DPATH = $MOD_DPATH"
+        python -m pytest --verbose --cov=pyflann_ibeis $MOD_DPATH ../tests
+        cd ..
+    - name: Test full loose sdist
+      run: |-
+        pwd
+        ls -al
+        true
+        # Run in a sandboxed directory
+        WORKSPACE_DNAME="testsrcdir_full_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
+        mkdir -p $WORKSPACE_DNAME
+        cd $WORKSPACE_DNAME
+        # Run the tests
+        # Get path to installed package
+        MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
+        echo "MOD_DPATH = $MOD_DPATH"
+        python -m pytest --verbose --cov=pyflann_ibeis $MOD_DPATH ../tests
+        cd ..
+    - uses: actions/upload-artifact@v3.1.3
+      name: Upload sdist artifact
+      with:
+        name: sdist_wheels
+        path: wheelhouse/*.tar.gz
+  build_binpy_wheels:
+    ##
+    # Build the binary wheels. Note: even though cibuildwheel will test
+    # them internally here, we will test them independently later in the
+    # test_binpy_wheels step.
+    ##
+    name: ${{ matrix.os }}, arch=${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Normally, xcookie generates explicit lists of platforms to build / test
+        # on, but in this case cibuildwheel does that for us, so we need to just
+        # set the environment variables for cibuildwheel. These are parsed out of
+        # the standard [tool.cibuildwheel] section in pyproject.toml and set
+        # explicitly here.
+        os:
+        - ubuntu-latest
+        cibw_skip:
+        - pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*
+        arch:
+        - auto
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+      if: runner.os == 'Linux' && matrix.arch != 'auto'
+      with:
+        platforms: all
+    - name: Build binary wheels
+      uses: pypa/cibuildwheel@v2.16.5
+      with:
+        output-dir: wheelhouse
+        config-file: pyproject.toml
+      env:
+        CIBW_SKIP: ${{ matrix.cibw_skip }}
+        CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+    - name: Show built files
+      shell: bash
+      run: ls -la wheelhouse
+    - name: Set up Python 3.12 to combine coverage
+      uses: actions/setup-python@v5.0.0
+      if: runner.os == 'Linux'
+      with:
+        python-version: '3.12'
+    - name: Combine coverage Linux
+      if: runner.os == 'Linux'
+      run: |-
+        echo '############ PWD'
+        pwd
+        cp .wheelhouse/.coverage* . || true
+        ls -al
+        python -m pip install coverage[toml]
+        echo '############ combine'
+        coverage combine . || true
+        echo '############ XML'
+        coverage xml -o ./coverage.xml || true
+        echo '### The cwd should now have a coverage.xml'
+        ls -altr
+        pwd
+    - uses: codecov/codecov-action@v4.0.1
+      name: Codecov Upload
+      with:
+        file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - uses: actions/upload-artifact@v3.1.3
+      name: Upload wheels artifact
+      with:
+        name: wheels
+        path: ./wheelhouse/pyflann_ibeis*.whl
+  test_binpy_wheels:
+    ##
+    # Download the previously build binary wheels from the
+    # build_binpy_wheels step, and test them in an independent
+    # environment.
+    ##
+    name: ${{ matrix.python-version }} on ${{ matrix.os }}, arch=${{ matrix.arch }} with ${{ matrix.install-extras }}
+    if: "! startsWith(github.event.ref, 'refs/heads/release')"
+    runs-on: ${{ matrix.os }}
+    needs:
+    - build_binpy_wheels
+    strategy:
+      fail-fast: false
+      matrix:
+        # Xcookie generates an explicit list of environments that will be used
+        # for testing instead of using the more concise matrix notation.
+        include:
+        - python-version: '3.8'
+          install-extras: tests-strict,runtime-strict
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.12'
+          install-extras: tests-strict,runtime-strict,optional-strict
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.8'
+          install-extras: tests,optional
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.9'
+          install-extras: tests,optional
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.10'
+          install-extras: tests,optional
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.11'
+          install-extras: tests,optional
+          os: ubuntu-latest
+          arch: auto
+        - python-version: '3.12'
+          install-extras: tests,optional
+          os: ubuntu-latest
+          arch: auto
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+      if: runner.os == 'Linux' && matrix.arch != 'auto'
+      with:
+        platforms: all
+    - name: Setup Python
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/download-artifact@v2.1.1
+      name: Download wheels
+      with:
+        name: wheels
+        path: wheelhouse
+    - name: Install wheel ${{ matrix.install-extras }}
+      shell: bash
+      env:
+        INSTALL_EXTRAS: ${{ matrix.install-extras }}
+      run: |-
+        echo "Finding the path to the wheel"
+        ls wheelhouse || echo "wheelhouse does not exist"
+        echo "Installing helpers"
+        pip install setuptools>=0.8 setuptools_scm wheel build -U
+        pip install tomli pkginfo
+        export WHEEL_FPATH=$(python -c "import pathlib; print(str(sorted(pathlib.Path('wheelhouse').glob('pyflann_ibeis*.whl'))[-1]).replace(chr(92), chr(47)))")
+        export MOD_VERSION=$(python -c "from pkginfo import Wheel; print(Wheel('$WHEEL_FPATH').version)")
+        echo "$WHEEL_FPATH=WHEEL_FPATH"
+        echo "$INSTALL_EXTRAS=INSTALL_EXTRAS"
+        echo "$MOD_VERSION=MOD_VERSION"
+        pip install --prefer-binary "pyflann_ibeis[$INSTALL_EXTRAS]==$MOD_VERSION" -f wheelhouse
+        echo "Install finished."
+    - name: Test wheel ${{ matrix.install-extras }}
+      shell: bash
+      env:
+        CI_PYTHON_VERSION: py${{ matrix.python-version }}
+      run: |-
+        echo "Creating test sandbox directory"
+        export WORKSPACE_DNAME="testdir_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
+        echo "WORKSPACE_DNAME=$WORKSPACE_DNAME"
+        mkdir -p $WORKSPACE_DNAME
+        echo "cd-ing into the workspace"
+        cd $WORKSPACE_DNAME
+        pwd
+        ls -altr
+        # Get the path to the installed package and run the tests
+        export MOD_DPATH=$(python -c "import pyflann_ibeis, os; print(os.path.dirname(pyflann_ibeis.__file__))")
+        export MOD_NAME=pyflann_ibeis
+        echo "
+        ---
+        MOD_DPATH = $MOD_DPATH
+        ---
+        running the pytest command inside the workspace
+        ---
+        "
+        python -m pytest --verbose -p pytester -p no:doctest --xdoctest --cov-config ../pyproject.toml --cov-report term --durations=100 --cov="$MOD_NAME" "$MOD_DPATH" ../tests
+        echo "pytest command finished, moving the coverage file to the repo root"
+        ls -al
+        # Move coverage file to a new name
+        mv .coverage "../.coverage.$WORKSPACE_DNAME"
+        echo "changing directory back to th repo root"
+        cd ..
+        ls -al
+    - name: Combine coverage Linux
+      if: runner.os == 'Linux'
+      run: |-
+        echo '############ PWD'
+        pwd
+        cp .wheelhouse/.coverage* . || true
+        ls -al
+        python -m pip install coverage[toml]
+        echo '############ combine'
+        coverage combine . || true
+        echo '############ XML'
+        coverage xml -o ./coverage.xml || true
+        echo '### The cwd should now have a coverage.xml'
+        ls -altr
+        pwd
+    - uses: codecov/codecov-action@v4.0.1
+      name: Codecov Upload
+      with:
+        file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+  test_deploy:
+    name: Uploading Test to PyPi
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && ! startsWith(github.event.ref, 'refs/tags') && ! startsWith(github.event.ref, 'refs/heads/release')
+    needs:
+    - build_and_test_sdist
+    - build_binpy_wheels
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - uses: actions/download-artifact@v2.1.1
+      name: Download wheels
+      with:
+        name: wheels
+        path: wheelhouse
+    - uses: actions/download-artifact@v2.1.1
+      name: Download sdist
+      with:
+        name: sdist_wheels
+        path: wheelhouse
+    - name: Show files to upload
+      shell: bash
+      run: ls -la wheelhouse
+    - name: Sign and Publish
+      env:
+        TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_TWINE_PASSWORD }}
+        CI_SECRET: ${{ secrets.CI_SECRET }}
+      run: |-
+        GPG_EXECUTABLE=gpg
+        $GPG_EXECUTABLE --version
+        openssl version
+        $GPG_EXECUTABLE --list-keys
+        echo "Decrypting Keys"
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/ci_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/ci_secret_gpg_subkeys.pgp.enc | $GPG_EXECUTABLE --import
+        echo "Finish Decrypt Keys"
+        $GPG_EXECUTABLE --list-keys || true
+        $GPG_EXECUTABLE --list-keys  || echo "first invocation of gpg creates directories and returns 1"
+        $GPG_EXECUTABLE --list-keys
+        VERSION=$(python -c "import setup; print(setup.VERSION)")
+        pip install twine
+        pip install urllib3 requests[security] twine
+        GPG_KEYID=$(cat dev/public_gpg_key)
+        echo "GPG_KEYID = '$GPG_KEYID'"
+        GPG_SIGN_CMD="$GPG_EXECUTABLE --batch --yes --detach-sign --armor --local-user $GPG_KEYID"
+        WHEEL_PATHS=(wheelhouse/*.whl wheelhouse/*.tar.gz)
+        WHEEL_PATHS_STR=$(printf '"%s" ' "${WHEEL_PATHS[@]}")
+        echo "$WHEEL_PATHS_STR"
+        for WHEEL_PATH in "${WHEEL_PATHS[@]}"
+        do
+            echo "------"
+            echo "WHEEL_PATH = $WHEEL_PATH"
+            $GPG_SIGN_CMD --output $WHEEL_PATH.asc $WHEEL_PATH
+            $GPG_EXECUTABLE --verify $WHEEL_PATH.asc $WHEEL_PATH  || echo "hack, the first run of gpg very fails"
+            $GPG_EXECUTABLE --verify $WHEEL_PATH.asc $WHEEL_PATH
+        done
+        ls -la wheelhouse
+        pip install opentimestamps-client
+        ots stamp wheelhouse/*.whl wheelhouse/*.tar.gz wheelhouse/*.asc
+        ls -la wheelhouse
+        twine upload --username __token__ --password "$TWINE_PASSWORD" --repository-url "$TWINE_REPOSITORY_URL" wheelhouse/*.whl wheelhouse/*.tar.gz --skip-existing --verbose || { echo "failed to twine upload" ; exit 1; }
+    - uses: actions/upload-artifact@v3.1.3
+      name: Upload deploy artifacts
+      with:
+        name: deploy_artifacts
+        path: |-
+          wheelhouse/*.whl
+          wheelhouse/*.zip
+          wheelhouse/*.tar.gz
+          wheelhouse/*.asc
+          wheelhouse/*.ots
+  live_deploy:
+    name: Uploading Live to PyPi
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags') || startsWith(github.event.ref, 'refs/heads/release'))
+    needs:
+    - build_and_test_sdist
+    - build_binpy_wheels
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - uses: actions/download-artifact@v2.1.1
+      name: Download wheels
+      with:
+        name: wheels
+        path: wheelhouse
+    - uses: actions/download-artifact@v2.1.1
+      name: Download sdist
+      with:
+        name: sdist_wheels
+        path: wheelhouse
+    - name: Show files to upload
+      shell: bash
+      run: ls -la wheelhouse
+    - name: Sign and Publish
+      env:
+        TWINE_REPOSITORY_URL: https://upload.pypi.org/legacy/
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        CI_SECRET: ${{ secrets.CI_SECRET }}
+      run: |-
+        GPG_EXECUTABLE=gpg
+        $GPG_EXECUTABLE --version
+        openssl version
+        $GPG_EXECUTABLE --list-keys
+        echo "Decrypting Keys"
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/ci_public_gpg_key.pgp.enc | $GPG_EXECUTABLE --import
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/gpg_owner_trust.enc | $GPG_EXECUTABLE --import-ownertrust
+        openssl enc -aes-256-cbc -pbkdf2 -md SHA512 -pass env:CI_SECRET -d -a -in dev/ci_secret_gpg_subkeys.pgp.enc | $GPG_EXECUTABLE --import
+        echo "Finish Decrypt Keys"
+        $GPG_EXECUTABLE --list-keys || true
+        $GPG_EXECUTABLE --list-keys  || echo "first invocation of gpg creates directories and returns 1"
+        $GPG_EXECUTABLE --list-keys
+        VERSION=$(python -c "import setup; print(setup.VERSION)")
+        pip install twine
+        pip install urllib3 requests[security] twine
+        GPG_KEYID=$(cat dev/public_gpg_key)
+        echo "GPG_KEYID = '$GPG_KEYID'"
+        GPG_SIGN_CMD="$GPG_EXECUTABLE --batch --yes --detach-sign --armor --local-user $GPG_KEYID"
+        WHEEL_PATHS=(wheelhouse/*.whl wheelhouse/*.tar.gz)
+        WHEEL_PATHS_STR=$(printf '"%s" ' "${WHEEL_PATHS[@]}")
+        echo "$WHEEL_PATHS_STR"
+        for WHEEL_PATH in "${WHEEL_PATHS[@]}"
+        do
+            echo "------"
+            echo "WHEEL_PATH = $WHEEL_PATH"
+            $GPG_SIGN_CMD --output $WHEEL_PATH.asc $WHEEL_PATH
+            $GPG_EXECUTABLE --verify $WHEEL_PATH.asc $WHEEL_PATH  || echo "hack, the first run of gpg very fails"
+            $GPG_EXECUTABLE --verify $WHEEL_PATH.asc $WHEEL_PATH
+        done
+        ls -la wheelhouse
+        pip install opentimestamps-client
+        ots stamp wheelhouse/*.whl wheelhouse/*.tar.gz wheelhouse/*.asc
+        ls -la wheelhouse
+        twine upload --username __token__ --password "$TWINE_PASSWORD" --repository-url "$TWINE_REPOSITORY_URL" wheelhouse/*.whl wheelhouse/*.tar.gz --skip-existing --verbose || { echo "failed to twine upload" ; exit 1; }
+    - uses: actions/upload-artifact@v3.1.3
+      name: Upload deploy artifacts
+      with:
+        name: deploy_artifacts
+        path: |-
+          wheelhouse/*.whl
+          wheelhouse/*.zip
+          wheelhouse/*.tar.gz
+          wheelhouse/*.asc
+          wheelhouse/*.ots
+  release:
+    name: Create Github Release
+    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags') || startsWith(github.event.ref, 'refs/heads/release'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+    - live_deploy
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4.1.1
+    - uses: actions/download-artifact@v2.1.1
+      name: Download artifacts
+      with:
+        name: deploy_artifacts
+        path: wheelhouse
+    - name: Show files to release
+      shell: bash
+      run: ls -la wheelhouse
+    - run: 'echo "Automatic Release Notes. TODO: improve" > ${{ github.workspace }}-CHANGELOG.txt'
+    - name: Tag Release Commit
+      if: (startsWith(github.event.ref, 'refs/heads/release'))
+      run: |-
+        export VERSION=$(python -c "import setup; print(setup.VERSION)")
+        git tag "v$VERSION"
+        git push origin "v$VERSION"
+    - uses: softprops/action-gh-release@v1
+      name: Create Release
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        body_path: ${{ github.workspace }}-CHANGELOG.txt
+        tag_name: ${{ github.ref }}
+        name: Release ${{ github.ref }}
+        body: Automatic Release
+        generate_release_notes: true
+        draft: true
+        prerelease: false
+        files: |-
+          wheelhouse/*.whl
+          wheelhouse/*.asc
+          wheelhouse/*.ots
+          wheelhouse/*.zip
+          wheelhouse/*.tar.gz
+
+
+###
+# Unfortunately we cant (yet) use the yaml docstring trick here
+# https://github.community/t/allow-unused-keys-in-workflow-yaml-files/172120
+#__doc__: |
+#    # How to run locally
+#    # https://packaging.python.org/guides/using-testpypi/
+#    git clone https://github.com/nektos/act.git $HOME/code/act
+#    chmod +x $HOME/code/act/install.sh
+#    (cd $HOME/code/act && ./install.sh -b $HOME/.local/opt/act)
+#
+#    load_secrets
+#    unset GITHUB_TOKEN
+#    $HOME/.local/opt/act/act \
+#        --secret=EROTEMIC_TWINE_PASSWORD=$EROTEMIC_TWINE_PASSWORD \
+#        --secret=EROTEMIC_TWINE_USERNAME=$EROTEMIC_TWINE_USERNAME \
+#        --secret=EROTEMIC_CI_SECRET=$EROTEMIC_CI_SECRET \
+#        --secret=EROTEMIC_TEST_TWINE_USERNAME=$EROTEMIC_TEST_TWINE_USERNAME \
+#        --secret=EROTEMIC_TEST_TWINE_PASSWORD=$EROTEMIC_TEST_TWINE_PASSWORD
