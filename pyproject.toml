@@ -25,8 +25,8 @@ test-command = "python {project}/run_tests.py"
 
 
 # See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
-#manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
-#manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
+manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
+manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"

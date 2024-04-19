@@ -136,8 +136,8 @@ def parse_version(fpath):
     return visitor.version
 
 project = 'pyflann_ibeis'
-copyright = '2024, Jon Crall'
-author = 'Jon Crall'
+copyright = '2024, Jon Crall Marius Muja'
+author = 'Jon Crall Marius Muja'
 modname = 'pyflann_ibeis'
 
 repo_dpath = dirname(dirname(dirname(__file__)))
@@ -371,7 +371,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'pyflann_ibeis.tex', 'pyflann_ibeis Documentation',
-     'Jon Crall', 'manual'),
+     'Jon Crall Marius Muja', 'manual'),
 ]
 
 
