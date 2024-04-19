@@ -262,20 +262,20 @@ KWARGS = OrderedDict(
     include_package_data=False,
     # List of classifiers available at:
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     classifiers=[
         'Development Status :: 6 - Mature',
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'Operating System :: MacOS :: MacOS X',
+        # 'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        # 'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Image Recognition'
     ],
