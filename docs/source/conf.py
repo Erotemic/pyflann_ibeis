@@ -16,14 +16,15 @@ Notes:
 
     # need to edit the conf.py
 
+    # Remove any old auto docs folder and regenerate it.
+    rm -rf ~/code/pyflann_ibeis/docs/source/auto
     cd ~/code/pyflann_ibeis/docs
-    sphinx-apidoc --private --separate -f -o ~/code/pyflann_ibeis/docs/source/auto ~/code/pyflann_ibeis/pyflann_ibeis
+    sphinx-apidoc --private --separate --force --output-dir ~/code/pyflann_ibeis/docs/source/auto ~/code/pyflann_ibeis/pyflann_ibeis
+    git add source/auto/*.rst
 
     # Note: the module should importable before running this
     # (e.g. install it in developer mode or munge the PYTHONPATH)
     make html
-
-    git add source/auto/*.rst
 
     Also:
         To turn on PR checks
@@ -83,6 +84,7 @@ Notes:
                 push events,
                 tag push events,
                 merge request events
+                release events
 
             Click the "Add webhook" button.
 
@@ -136,7 +138,7 @@ def parse_version(fpath):
     return visitor.version
 
 project = 'pyflann_ibeis'
-copyright = '2024, Jon Crall Marius Muja'
+copyright = '2025, Jon Crall Marius Muja'
 author = 'Jon Crall Marius Muja'
 modname = 'pyflann_ibeis'
 
@@ -194,6 +196,9 @@ autosummary_mock_imports = [
     'geowatch.tasks.cold.export_change_map',
 ]
 
+autodoc_default_options = {  # Document callable classes
+    'special-members': '__call__'}
+
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
 # autodoc_mock_imports = ['torch', 'torchvision', 'visdom']
@@ -217,7 +222,7 @@ intersphinx_mapping = {
     # 'xxhash': ('https://pypi.org/project/xxhash/', None),
     # 'pygments': ('https://pygments.org/docs/', None),
     # 'tqdm': ('https://tqdm.github.io/', None),
-    # Requries that the repo have objects.inv
+    # Requires that the repo have objects.inv
     'kwarray': ('https://kwarray.readthedocs.io/en/latest/', None),
     'kwimage': ('https://kwimage.readthedocs.io/en/latest/', None),
     # 'kwplot': ('https://kwplot.readthedocs.io/en/latest/', None),
@@ -588,7 +593,7 @@ class GoogleStyleDocstringProcessor:
 
             accum.append(line)
 
-        # Finialize the last section
+        # Finalize the last section
         accept()
 
         lines[:] = new_lines

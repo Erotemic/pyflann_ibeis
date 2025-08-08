@@ -11,7 +11,7 @@ url = "https://github.com/Erotemic/pyflann_ibeis"
 description = "pyflann fork for IBEIS"
 author = ['Jon Crall', 'Marius Muja']
 author_email="erotemic@gmail.com"
-min_python = 3.8
+min_python = '3.8'
 license = "BSD"
 dev_status = "stable"
 
