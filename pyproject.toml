@@ -31,7 +31,7 @@ manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"
-before-all = "yum update -y && yum install lz4-devel -y"
+before-all = "yum update -y && yum --disablerepo=base,updates install lz4-devel -y"
 
 #[tool.cibuildwheel.windows]
 #before-all = "choco install lz4 -y"
