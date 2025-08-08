@@ -18,6 +18,49 @@ import sys
 from collections import OrderedDict
 import re
 from os.path import exists, dirname, join
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
+import subprocess
+import os
+from pathlib import Path
+
+
+class CMakeBuildExt(build_ext):
+    def run(self):
+        self.build_cmake()
+        super().run()
+
+    def build_cmake(self):
+        build_temp = Path(self.build_temp)
+        build_temp.mkdir(parents=True, exist_ok=True)
+        install_dir = (build_temp / "install").resolve()
+        cmake_args = [
+            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            "-DSKBUILD=ON",
+            f"-DCMAKE_INSTALL_PREFIX={install_dir}",
+            "-DBUILD_C_BINDINGS=ON",
+            "-DBUILD_MATLAB_BINDINGS=OFF",
+            "-DBUILD_EXAMPLES=OFF",
+            "-DBUILD_TESTS=OFF",
+            "-DBUILD_DOC=OFF",
+        ]
+        subprocess.check_call([
+            "cmake",
+            str(Path(__file__).parent),
+            *cmake_args,
+        ], cwd=build_temp)
+        subprocess.check_call(
+            ["cmake", "--build", ".", "--target", "install", "--config", "Release"],
+            cwd=build_temp,
+        )
+        lib_src = install_dir / "pyflann_ibeis" / "lib"
+        lib_dst = Path(self.build_lib) / "pyflann_ibeis" / "lib"
+        if lib_src.is_dir():
+            self.mkpath(str(lib_dst))
+            for fname in os.listdir(lib_src):
+                self.copy_file(str(lib_src / fname), str(lib_dst / fname))
+        else:
+            raise RuntimeError("CMake build failed: libs not found")
 
 
 def parse_version(fpath):
@@ -177,18 +220,6 @@ def parse_requirements(fname="requirements.txt", versions=False):
     return packages
 
 
-try:
-    class EmptyListWithLength(list):
-        def __len__(self):
-            return 1
-
-        def __repr__(self):
-            return 'EmptyListWithLength()'
-
-        def __str__(self):
-            return 'EmptyListWithLength()'
-except Exception:
-    raise RuntimeError('FAILED TO ADD BUILD CONSTRUCTS')
 
 
 NAME = 'pyflann_ibeis'
@@ -201,6 +232,14 @@ AUTHOR_EMAIL = 'erotemic@gmail.com'
 URL = 'https://github.com/Erotemic/pyflann_ibeis'
 LICENSE = 'BSD'
 DESCRIPTION = 'FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors'
+
+# Define a tiny abi3 extension so wheels use the stable ABI
+abi3_extension = Extension(
+    'pyflann_ibeis._abi3',
+    sources=['pyflann_ibeis/_abi3.c'],
+    py_limited_api=True,
+    define_macros=[('Py_LIMITED_API', '0x03080000')],
+)
 
 
 setupkw = {}
@@ -279,19 +318,9 @@ KWARGS = OrderedDict(
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Image Recognition'
     ],
-    cmake_args=[
-        '-DBUILD_C_BINDINGS=ON',
-        '-DBUILD_MATLAB_BINDINGS=OFF',
-        '-DBUILD_EXAMPLES=OFF',
-        '-DBUILD_TESTS=OFF',
-        '-DBUILD_DOC=OFF',
-    ],
-    ext_modules=EmptyListWithLength(),  # hack for including ctypes bins
+    ext_modules=[abi3_extension],
 )
 
 if __name__ == '__main__':
-    """
-    python -c "import pyflann_ibeis; print(pyflann_ibeis.__file__)"
-    """
-    import skbuild
-    skbuild.setup(**KWARGS)
+    """Build with setuptools and a custom CMake step"""
+    setup(cmdclass={'build_ext': CMakeBuildExt}, **KWARGS)
