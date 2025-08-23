@@ -10,12 +10,12 @@ url = "https://github.com/Erotemic/pyflann_ibeis"
 description = "pyflann fork for IBEIS"
 author = ['Jon Crall', 'Marius Muja']
 author_email="erotemic@gmail.com"
-min_python = 3.8
+min_python = '3.9'
 license = "BSD"
 dev_status = "stable"
 
 [tool.cibuildwheel]
-build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
+build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
 #build = "cp312-*"
 build-frontend = "build"
 skip = "pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*"
@@ -25,8 +25,9 @@ test-command = "python {project}/run_tests.py"
 
 
 # See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
-manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
-manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
+manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
+#manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
+#manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"

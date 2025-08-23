@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 r"""
-
-
 Build Wheels:
     pip install cibuildwheel
 
@@ -10,10 +8,7 @@ Build Wheels:
     CIBW_TEST_COMMAND='python {project}/run_tests.py' \
     CIBW_SKIP='pp*' \
         cibuildwheel --config-file pyproject.toml --platform linux --arch x86_64
-
-
 """
-from __future__ import absolute_import, division, print_function
 import sys
 from collections import OrderedDict
 import re
@@ -44,7 +39,10 @@ def static_parse(varname, fpath):
         def visit_Assign(self, node):
             for target in node.targets:
                 if getattr(target, "id", None) == varname:
-                    self.static_value = node.value.s
+                    try:
+                        self.static_value = node.value.value
+                    except AttributeError:
+                        self.static_value = node.value.s
 
     visitor = StaticVisitor()
     visitor.visit(pt)
@@ -271,11 +269,11 @@ KWARGS = OrderedDict(
         # 'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Image Recognition'
     ],
