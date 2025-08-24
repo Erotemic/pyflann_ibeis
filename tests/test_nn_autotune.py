@@ -42,10 +42,11 @@ class Test_PyFLANN_nn(unittest.TestCase):
         Make a set of random points, then pass the same ones to the
         query points.  Each point should be closest to itself.
         """
-        np.random.seed(0)
-        x = np.random.rand(N, dim)
-        xq = np.random.rand(N, dim)
-        # perm = np.random.permutation(N)
+        # np.random.seed(0)
+        rng = np.random.RandomState(0)
+        x = rng.rand(N, dim)
+        xq = rng.rand(N, dim)
+        # perm = rng.permutation(N)
 
         # compute ground truth nearest neighbors
         gt_idx, gt_dist = self.nn.nn(x, xq,

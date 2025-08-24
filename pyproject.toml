@@ -10,23 +10,24 @@ url = "https://github.com/Erotemic/pyflann_ibeis"
 description = "pyflann fork for IBEIS"
 author = ['Jon Crall', 'Marius Muja']
 author_email="erotemic@gmail.com"
-min_python = 3.8
+min_python = '3.9'
 license = "BSD"
 dev_status = "stable"
 
 [tool.cibuildwheel]
-build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
+build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 #build = "cp312-*"
 build-frontend = "build"
-skip = "pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*"
+skip = "pp* *-musllinux_*"
 build-verbosity = 1
 test-requires = [ "-r requirements/tests.txt",]
 test-command = "python {project}/run_tests.py"
 
 
 # See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
-manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
-manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
+manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
+#manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
+#manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.cibuildwheel.linux]
 #before-all = "yum install epel-release lz4 lz4-devel -y"
@@ -39,7 +40,7 @@ before-all = "yum update -y && yum install lz4-devel -y"
 #before-all = "brew install lz4"
 
 [tool.pytest.ini_options]
-addopts = "-p no:doctest --xdoctest --xdoctest-style=google --ignore-glob=setup.py"
+addopts = "-p no:doctest --xdoctest --xdoctest-style=google --ignore-glob=bin --ignore-glob=setup.py --ignore-glob=docs --ignore-glob=htmlcov"
 norecursedirs = ".git ignore build __pycache__ dev _skbuild"
 filterwarnings = [ "default", "ignore:.*No cfgstr given in Cacher constructor or call.*:Warning", "ignore:.*Define the __nice__ method for.*:Warning", "ignore:.*private pytest class or function.*:Warning",]
 

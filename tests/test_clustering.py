@@ -13,7 +13,8 @@ class Test_PyFLANN_clustering(unittest.TestCase):
     ##########################################################################
 
     def test_Rand(self):
-        x = np.random.rand(100, 10000)
+        rng = np.random.RandomState(10)
+        x = rng.rand(100, 10000)
         nK = 10
         centroids = self.nn.kmeans(x, nK)
         self.assertTrue(len(centroids) == nK)
@@ -41,16 +42,16 @@ class Test_PyFLANN_clustering(unittest.TestCase):
         Make a set of random points, then pass the same ones to the
         query points.  Each point should be closest to itself.
         """
-        np.random.seed(0)
-        x = np.random.rand(N, dim)
+        rng = np.random.RandomState(0)
+        x = rng.rand(N, dim)
         xc = np.concatenate(tuple([x for i in range(dup)]))
 
         if dup > 1:
-            xc += np.random.randn(xc.shape[0], xc.shape[1]) * 0.000001 / dim
+            xc += rng.randn(xc.shape[0], xc.shape[1]) * 0.000001 / dim
 
         # rnseed = int(time.time())
         centroids = self.nn.kmeans(
-            xc[np.random.permutation(len(xc))], N, centers_init="random", random_seed=2)
+            xc[rng.permutation(len(xc))], N, centers_init="random", random_seed=2)
         mindists = np.array([[sum((d1 - d2)**2) for d1 in x]
                              for d2 in centroids]).min(0)
         # print mindists
@@ -60,7 +61,7 @@ class Test_PyFLANN_clustering(unittest.TestCase):
 
         # rnseed = int(time.time())
         centroids = self.nn.kmeans(
-            xc[np.random.permutation(len(xc))], N, centers_init="gonzales", random_seed=2)
+            xc[rng.permutation(len(xc))], N, centers_init="gonzales", random_seed=2)
         mindists = np.array([[sum((d1 - d2)**2) for d1 in x]
                              for d2 in centroids]).min(0)
         # print mindists
@@ -68,7 +69,7 @@ class Test_PyFLANN_clustering(unittest.TestCase):
             self.assertAlmostEqual(m, 0.0, 1)
 
         centroids = self.nn.kmeans(
-            xc[np.random.permutation(len(xc))], N, centers_init="kmeanspp", random_seed=2)
+            xc[rng.permutation(len(xc))], N, centers_init="kmeanspp", random_seed=2)
         mindists = np.array([[sum((d1 - d2)**2) for d1 in x]
                              for d2 in centroids]).min(0)
         # print mindists
@@ -84,7 +85,8 @@ class Test_PyFLANN_clustering(unittest.TestCase):
         import pytest
         pytest.skip('broken, but not worth fixing')
 
-        data = np.random.rand(1000, 2)  # Random, so we can get a lot of local minima
+        rng = np.random.RandomState(0)
+        data = rng.rand(1000, 2)  # Random, so we can get a lot of local minima
 
         rnseed = int(time.time())
         cl1 = self.nn.kmeans(data, 50, random_seed=rnseed)
@@ -94,7 +96,8 @@ class Test_PyFLANN_clustering(unittest.TestCase):
 
     def testrandnumber_different(self):
 
-        data = np.random.rand(1000, 100)  # Random, so we can get a lot of local minima
+        rng = np.random.RandomState(0)
+        data = rng.rand(1000, 100)  # Random, so we can get a lot of local minima
 
         rnseed = int(time.time())
         cl1 = self.nn.kmeans(data, 50, random_seed=rnseed)
