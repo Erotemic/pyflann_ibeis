@@ -124,6 +124,7 @@ jobs:
         # explicitly here.
         os:
         - ubuntu-latest
+        - windows-latest
         cibw_skip:
         - pp* cp27-* cp34-* cp35-* cp36-* cp37-* *-musllinux_*
         arch:
@@ -144,7 +145,12 @@ jobs:
       env:
         CIBW_SKIP: ${{ matrix.cibw_skip }}
         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+        CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
         CIBW_ENVIRONMENT: PYTHONUTF8=1
+        CIBW_ENVIRONMENT_WINDOWS: >-
+          PYTHONUTF8=1
+          VCPKG_ROOT=C:/vcpkg
+          CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         PYTHONUTF8: '1'
     - name: Show built files
       shell: bash
@@ -237,6 +243,10 @@ jobs:
           install-extras: tests,optional
           os: ubuntu-latest
           arch: auto
+        - python-version: '3.11'
+          install-extras: runtime-strict
+          os: windows-latest
+          arch: auto
     steps:
     - name: Checkout source
       uses: actions/checkout@v4.2.2
@@ -294,6 +304,7 @@ jobs:
       shell: bash
       env:
         CI_PYTHON_VERSION: py${{ matrix.python-version }}
+      if: runner.os != 'Windows'
       run: |-
         echo "Creating test sandbox directory"
         export WORKSPACE_DNAME="testdir_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
@@ -321,6 +332,18 @@ jobs:
         echo "changing directory back to th repo root"
         cd ..
         ls -al
+    - name: Smoke test wheel on Windows
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |-
+        # Windows smoke test: validate import/extension load without relying on
+        # full pytest (helps avoid runner-specific flakiness initially).
+        python - <<'PY'
+        import pyflann_ibeis
+        from pyflann_ibeis import flann_ctypes
+        assert flann_ctypes.flannlib is not None, "Failed to load flann library"
+        print("Loaded flann library from:", flann_ctypes.libpath)
+        PY
     - name: Combine coverage Linux
       if: runner.os == 'Linux'
       run: |-
