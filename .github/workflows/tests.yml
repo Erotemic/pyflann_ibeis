@@ -306,11 +306,21 @@ jobs:
         echo "MOD_VERSION=$MOD_VERSION"
         python -m uv pip install --prerelease=allow "pyflann_ibeis[$INSTALL_EXTRAS]==$MOD_VERSION" -f wheelhouse
         echo "Install finished."
+    - name: Smoke test wheel on Windows
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |-
+        # Windows smoke test: validate import/extension load before full pytest.
+        python - <<'PY'
+        import pyflann_ibeis
+        from pyflann_ibeis import flann_ctypes
+        assert flann_ctypes.flannlib is not None, "Failed to load flann library"
+        print("Loaded flann library from:", flann_ctypes.libpath)
+        PY
     - name: Test wheel ${{ matrix.install-extras }}
       shell: bash
       env:
         CI_PYTHON_VERSION: py${{ matrix.python-version }}
-      if: runner.os != 'Windows'
       run: |-
         echo "Creating test sandbox directory"
         export WORKSPACE_DNAME="testdir_${CI_PYTHON_VERSION}_${GITHUB_RUN_ID}_${RUNNER_OS}"
@@ -338,18 +348,6 @@ jobs:
         echo "changing directory back to th repo root"
         cd ..
         ls -al
-    - name: Smoke test wheel on Windows
-      if: runner.os == 'Windows'
-      shell: bash
-      run: |-
-        # Windows smoke test: validate import/extension load without relying on
-        # full pytest (helps avoid runner-specific flakiness initially).
-        python - <<'PY'
-        import pyflann_ibeis
-        from pyflann_ibeis import flann_ctypes
-        assert flann_ctypes.flannlib is not None, "Failed to load flann library"
-        print("Loaded flann library from:", flann_ctypes.libpath)
-        PY
     - name: Combine coverage Linux
       if: runner.os == 'Linux'
       run: |-

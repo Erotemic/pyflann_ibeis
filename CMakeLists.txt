@@ -171,6 +171,8 @@ if (WIN32)
       set(LZ4_INCLUDE_DIRS "${_lz4_include_dirs}")
     endif()
   endif()
+  # Fallback: some vcpkg LZ4 configs don't expose include dirs on the target.
+  # In that case, search the vcpkg installed prefix directly.
   if (NOT LZ4_INCLUDE_DIRS OR NOT LZ4_LIBRARIES)
     set(_lz4_hint_paths "")
     if (DEFINED ENV{VCPKG_ROOT})

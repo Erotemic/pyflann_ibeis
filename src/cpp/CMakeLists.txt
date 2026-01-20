@@ -194,12 +194,17 @@ else()
     install (
         TARGETS flann_cpp flann_cpp_s
         EXPORT ${targets_export_name}
+        # Fallback for Windows wheels: ensure DLLs land next to the Python package
+        # so flann_ctypes can load them from pyflann_ibeis/lib.
+        RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
         ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
     install (
         TARGETS flann flann_s
         EXPORT ${targets_export_name}
+        # Fallback for Windows wheels: place flann.dll in the package lib dir.
+        RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
         ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
