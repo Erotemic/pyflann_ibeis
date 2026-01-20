@@ -150,6 +150,7 @@ jobs:
         CIBW_ENVIRONMENT_WINDOWS: >-
           PYTHONUTF8=1
           VCPKG_ROOT=C:/vcpkg
+          VCPKG_TARGET_TRIPLET=x64-windows
           CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         PYTHONUTF8: '1'
     - name: Show built files
