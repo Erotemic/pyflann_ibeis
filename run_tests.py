@@ -118,8 +118,12 @@ if __name__ == '__main__':
             # '--cov-report', 'term',
             # '--cov-report', 'xml',
             # '--cov=' + package_name,
-            modpath, '.'
+            '.'
         ]
+        # On Windows, avoid collecting from the installed module path because
+        # pytest may traverse protected junctions (e.g., C:\\Documents and Settings).
+        if modpath is not None and sys.platform != 'win32':
+            pytest_args.insert(0, modpath)
         # if is_cibuildwheel():
         #     pytest_args.append('--cov-append')
 
