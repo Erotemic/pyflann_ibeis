@@ -145,12 +145,12 @@ jobs:
       env:
         CIBW_SKIP: ${{ matrix.cibw_skip }}
         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-        CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+        CIBW_ARCHS_WINDOWS: AMD64
         CIBW_ENVIRONMENT: PYTHONUTF8=1
         CIBW_ENVIRONMENT_WINDOWS: >-
           PYTHONUTF8=1
           VCPKG_ROOT=C:/vcpkg
-          CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          CMAKE_ARGS=-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         PYTHONUTF8: '1'
     - name: Show built files
       shell: bash
@@ -280,9 +280,14 @@ jobs:
         python -m uv pip install tomli pkginfo
         export WHEEL_FPATH=$(python -c "if 1:
             import pathlib
+            import sysconfig
             dist_dpath = pathlib.Path('wheelhouse')
             candidates = list(dist_dpath.glob('pyflann_ibeis*.whl'))
             candidates += list(dist_dpath.glob('pyflann_ibeis*.tar.gz'))
+            platform_tag = sysconfig.get_platform().replace('-', '_')
+            platform_wheels = [p for p in candidates if platform_tag in p.name]
+            if platform_wheels:
+                candidates = platform_wheels
             fpath = sorted(candidates)[-1]
             print(str(fpath).replace(chr(92), chr(47)))
         ")

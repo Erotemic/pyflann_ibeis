@@ -163,11 +163,8 @@ if (WIN32)
   # Windows uses vcpkg in CI (see cibuildwheel config). To reproduce locally:
   #   vcpkg install lz4:x64-windows
   #   cmake -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ...
-  find_package(LZ4 CONFIG QUIET)
-  if (TARGET LZ4::LZ4)
-    set(LZ4_LIBRARIES LZ4::LZ4)
-    get_target_property(LZ4_INCLUDE_DIRS LZ4::LZ4 INTERFACE_INCLUDE_DIRECTORIES)
-  elseif (TARGET lz4::lz4)
+  find_package(lz4 CONFIG QUIET)
+  if (TARGET lz4::lz4)
     set(LZ4_LIBRARIES lz4::lz4)
     get_target_property(LZ4_INCLUDE_DIRS lz4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
   else()
