@@ -159,8 +159,51 @@ if (APPLE)
   #include_directories("/opt/homebrew/lib")
 endif (APPLE)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LZ4 REQUIRED liblz4)
+if (WIN32)
+  # Windows uses vcpkg in CI (see cibuildwheel config). To reproduce locally:
+  #   vcpkg install lz4:x64-windows
+  #   cmake -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ...
+  find_package(lz4 CONFIG QUIET)
+  if (TARGET lz4::lz4)
+    set(LZ4_LIBRARIES lz4::lz4)
+    get_target_property(_lz4_include_dirs lz4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
+    if (_lz4_include_dirs AND NOT _lz4_include_dirs STREQUAL "LZ4_INCLUDE_DIRS-NOTFOUND")
+      set(LZ4_INCLUDE_DIRS "${_lz4_include_dirs}")
+    endif()
+  endif()
+  # Fallback: some vcpkg LZ4 configs don't expose include dirs on the target.
+  # In that case, search the vcpkg installed prefix directly.
+  if (NOT LZ4_INCLUDE_DIRS OR NOT LZ4_LIBRARIES)
+    set(_lz4_hint_paths "")
+    if (DEFINED ENV{VCPKG_ROOT})
+      set(_lz4_vcpkg_root "$ENV{VCPKG_ROOT}")
+      set(_lz4_vcpkg_triplet "x64-windows")
+      if (DEFINED VCPKG_TARGET_TRIPLET)
+        set(_lz4_vcpkg_triplet "${VCPKG_TARGET_TRIPLET}")
+      endif()
+      list(APPEND _lz4_hint_paths "${_lz4_vcpkg_root}/installed/${_lz4_vcpkg_triplet}")
+    endif()
+    find_path(LZ4_INCLUDE_DIRS NAMES lz4.h
+      HINTS ${_lz4_hint_paths}
+      PATH_SUFFIXES include)
+    find_library(LZ4_LIBRARIES NAMES lz4 liblz4
+      HINTS ${_lz4_hint_paths}
+      PATH_SUFFIXES lib)
+  endif()
+  # Optional runtime DLL discovery for packaging on Windows (vcpkg installs lz4.dll).
+  if (NOT LZ4_RUNTIME_LIBRARY)
+    find_file(LZ4_RUNTIME_LIBRARY NAMES lz4.dll
+      HINTS ${_lz4_hint_paths}
+      PATH_SUFFIXES bin)
+  endif()
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(LZ4 REQUIRED_VARS LZ4_LIBRARIES LZ4_INCLUDE_DIRS)
+else()
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(LZ4 REQUIRED liblz4)
+endif()
+
+include_directories(${LZ4_INCLUDE_DIRS})
 
 #set the C/C++ include path to the "include" directory
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)

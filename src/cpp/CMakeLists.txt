@@ -194,13 +194,29 @@ else()
     install (
         TARGETS flann_cpp flann_cpp_s
         EXPORT ${targets_export_name}
+        # Fallback for Windows wheels: ensure DLLs land next to the Python package
+        # so flann_ctypes can load them from pyflann_ibeis/lib.
+        RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
         ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
     install (
         TARGETS flann flann_s
         EXPORT ${targets_export_name}
+        # Fallback for Windows wheels: place flann.dll in the package lib dir.
+        RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
         ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
+    if (WIN32)
+        # Extra fallback: some generators still skip DLLs in the install step.
+        # Force-install the runtime DLLs into the package lib directory.
+        install(FILES $<TARGET_FILE:flann> $<TARGET_FILE:flann_cpp>
+            DESTINATION ${FLANN_LIB_INSTALL_DIR})
+        # Also bundle lz4.dll if found, because flann.dll depends on it.
+        if (LZ4_RUNTIME_LIBRARY)
+            install(FILES ${LZ4_RUNTIME_LIBRARY}
+                DESTINATION ${FLANN_LIB_INSTALL_DIR})
+        endif()
+    endif()
 endif()
