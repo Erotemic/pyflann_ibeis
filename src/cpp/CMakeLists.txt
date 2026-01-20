@@ -213,5 +213,10 @@ else()
         # Force-install the runtime DLLs into the package lib directory.
         install(FILES $<TARGET_FILE:flann> $<TARGET_FILE:flann_cpp>
             DESTINATION ${FLANN_LIB_INSTALL_DIR})
+        # Also bundle lz4.dll if found, because flann.dll depends on it.
+        if (LZ4_RUNTIME_LIBRARY)
+            install(FILES ${LZ4_RUNTIME_LIBRARY}
+                DESTINATION ${FLANN_LIB_INSTALL_DIR})
+        endif()
     endif()
 endif()

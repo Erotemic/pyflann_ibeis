@@ -190,6 +190,12 @@ if (WIN32)
       HINTS ${_lz4_hint_paths}
       PATH_SUFFIXES lib)
   endif()
+  # Optional runtime DLL discovery for packaging on Windows (vcpkg installs lz4.dll).
+  if (NOT LZ4_RUNTIME_LIBRARY)
+    find_file(LZ4_RUNTIME_LIBRARY NAMES lz4.dll
+      HINTS ${_lz4_hint_paths}
+      PATH_SUFFIXES bin)
+  endif()
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(LZ4 REQUIRED_VARS LZ4_LIBRARIES LZ4_INCLUDE_DIRS)
 else()
