@@ -208,4 +208,10 @@ else()
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
         ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
+    if (WIN32)
+        # Extra fallback: some generators still skip DLLs in the install step.
+        # Force-install the runtime DLLs into the package lib directory.
+        install(FILES $<TARGET_FILE:flann> $<TARGET_FILE:flann_cpp>
+            DESTINATION ${FLANN_LIB_INSTALL_DIR})
+    endif()
 endif()
