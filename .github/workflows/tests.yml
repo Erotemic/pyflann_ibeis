@@ -240,11 +240,23 @@ jobs:
           install-extras: tests,optional
           os: ubuntu-latest
           arch: auto
-        - python-version: 3.14.0-rc.1
+        - python-version: '3.14'
           install-extras: tests,optional
           os: ubuntu-latest
           arch: auto
-        - python-version: '3.11'
+        - python-version: '3.9'
+          install-extras: runtime-strict
+          os: windows-latest
+          arch: auto
+        - python-version: '3.10'
+          install-extras: runtime-strict
+          os: windows-latest
+          arch: auto
+        - python-version: '3.12'
+          install-extras: runtime-strict
+          os: windows-latest
+          arch: auto
+        - python-version: '3.13'
           install-extras: runtime-strict
           os: windows-latest
           arch: auto
@@ -281,14 +293,21 @@ jobs:
         python -m uv pip install tomli pkginfo
         export WHEEL_FPATH=$(python -c "if 1:
             import pathlib
-            import sysconfig
+            from packaging import tags
+            from packaging.utils import parse_wheel_filename
             dist_dpath = pathlib.Path('wheelhouse')
             candidates = list(dist_dpath.glob('pyflann_ibeis*.whl'))
             candidates += list(dist_dpath.glob('pyflann_ibeis*.tar.gz'))
-            platform_tag = sysconfig.get_platform().replace('-', '_')
-            platform_wheels = [p for p in candidates if platform_tag in p.name]
-            if platform_wheels:
-                candidates = platform_wheels
+            sys_tags = {str(t) for t in tags.sys_tags()}
+            matching = []
+            for wheel in candidates:
+                if wheel.suffix != '.whl':
+                    continue
+                _, _, wheel_tags = parse_wheel_filename(wheel.name)
+                if any(str(tag) in sys_tags for tag in wheel_tags):
+                    matching.append(wheel)
+            if matching:
+                candidates = matching
             fpath = sorted(candidates)[-1]
             print(str(fpath).replace(chr(92), chr(47)))
         ")
@@ -312,6 +331,10 @@ jobs:
       run: |-
         # Windows smoke test: validate import/extension load before full pytest.
         python - <<'PY'
+        import os
+        import sys
+        repo_dir = os.path.abspath(os.getcwd())
+        sys.path = [p for p in sys.path if os.path.abspath(p) != repo_dir]
         import pyflann_ibeis
         from pyflann_ibeis import flann_ctypes
         assert flann_ctypes.flannlib is not None, "Failed to load flann library"
