@@ -245,19 +245,19 @@ jobs:
           os: ubuntu-latest
           arch: auto
         - python-version: '3.9'
-          install-extras: runtime-strict
+          install-extras: tests,optional,runtime-strict
           os: windows-latest
           arch: auto
         - python-version: '3.10'
-          install-extras: runtime-strict
+          install-extras: tests,optional,runtime-strict
           os: windows-latest
           arch: auto
         - python-version: '3.12'
-          install-extras: runtime-strict
+          install-extras: tests,optional,runtime-strict
           os: windows-latest
           arch: auto
         - python-version: '3.13'
-          install-extras: runtime-strict
+          install-extras: tests,optional,runtime-strict
           os: windows-latest
           arch: auto
     steps:
