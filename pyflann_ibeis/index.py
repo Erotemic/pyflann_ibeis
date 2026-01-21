@@ -539,6 +539,9 @@ class FLANN(object):
                   'branching': branch_size,
                   'random_seed': kwargs['random_seed']}
 
+        if 'centers_init' in kwargs:
+            params['centers_init'] = kwargs['centers_init']
+
         self.__flann_parameters.update(params)
 
         numclusters = flann.compute_cluster_centers[pts.dtype.type](
