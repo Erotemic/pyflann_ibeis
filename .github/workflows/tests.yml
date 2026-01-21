@@ -303,20 +303,27 @@ jobs:
             for wheel in candidates:
                 if wheel.suffix != '.whl':
                     continue
-                _, _, wheel_tags = parse_wheel_filename(wheel.name)
+                try:
+                    _, _, _, wheel_tags = parse_wheel_filename(wheel.name)
+                except ValueError:
+                    _, _, wheel_tags = parse_wheel_filename(wheel.name)
                 if any(str(tag) in sys_tags for tag in wheel_tags):
                     matching.append(wheel)
             if matching:
                 candidates = matching
+            else:
+                candidates = [w for w in candidates if w.suffix == '.whl']
+            if not candidates:
+                raise SystemExit('No wheel artifacts found')
             fpath = sorted(candidates)[-1]
             print(str(fpath).replace(chr(92), chr(47)))
         ")
         export MOD_VERSION=$(python -c "if 1:
-            from pkginfo import Wheel, SDist
-            import pathlib
+            from pkginfo import Wheel
             fpath = '$WHEEL_FPATH'
-            cls = Wheel if fpath.endswith('.whl') else SDist
-            item = cls(fpath)
+            if not fpath:
+                raise SystemExit('WHEEL_FPATH is empty')
+            item = Wheel(fpath)
             print(item.version)
         ")
         echo "WHEEL_FPATH=$WHEEL_FPATH"
