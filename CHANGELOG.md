@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## Version 2.4.2 - Unreleased
 
 ### Fixed:
+* CI on windows
 * respect `centers_init` in kmeans
 
 
