@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Version 2.4.2 - Unreleased
 
+### Fixed:
+* respect `centers_init` in kmeans
+
 
 ## [Version 2.4.1] - Released 202x-xx-xx
 
