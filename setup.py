@@ -260,7 +260,7 @@ KWARGS = OrderedDict(
     include_package_data=False,
     # List of classifiers available at:
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     classifiers=[
         'Development Status :: 6 - Mature',
         'License :: OSI Approved :: BSD License',
