@@ -240,6 +240,15 @@ if (SKBUILD)
   # Override install paths when using scikit-build or scikit-build-core
   set(FLANN_LIB_INSTALL_DIR "pyflann_ibeis/lib")
   set(FLANN_INCLUDE_INSTALL_DIR "pyflann_ibeis/include")
+
+  # For editable inplace builds, put built libraries directly in the source package.
+  if (SKBUILD_STATE STREQUAL "editable")
+    set(_PYFLANN_EDITABLE_LIB_DIR "${PROJECT_SOURCE_DIR}/pyflann_ibeis/lib")
+    file(MAKE_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+  endif()
 endif()
 
 if (NOT SKBUILD)

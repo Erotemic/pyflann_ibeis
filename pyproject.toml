@@ -130,8 +130,7 @@ all = [
 minimum-version = "build-system.requires"
 cmake.version = ">=3.15"
 ninja.version = ">=1.10"
-build-dir = ".scikit-build/{wheel_tag}"
-editable.mode = "redirect"
+editable.mode = "inplace"
 wheel.packages = ["pyflann_ibeis"]
 cmake.args = [
   "-DBUILD_C_BINDINGS=ON",
