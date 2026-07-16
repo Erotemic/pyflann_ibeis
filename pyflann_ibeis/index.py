@@ -318,7 +318,7 @@ class FLANN(object):
         npts, dim = pts.shape
         flann.add_points[self.__curindex_type](
             self.__curindex, pts, npts, dim, rebuild_threshold)
-        self.__curindex_data = np.row_stack((self.__curindex_data, pts))
+        self.__curindex_data = np.vstack((self.__curindex_data, pts))
         self.__added_data.append(pts)
 
     def remove_point(self, idx):
