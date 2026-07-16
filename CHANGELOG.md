@@ -22,6 +22,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   lz4 binaries are cached on Windows; the full test suite runs once per wheel
   in the dedicated test jobs instead of also inside cibuildwheel, which now
   runs a quick import/load smoke test instead.
+* PyPI uploads now use trusted publishing (OIDC via `gh-action-pypi-publish`
+  and the `pypi`/`testpypi` GitHub environments) instead of encrypted twine
+  API tokens. GPG signing of artifacts is unchanged and still uses the
+  `CI_SECRET`-encrypted keys in `dev/`.
+
+### Fixed
+* Restored the `tests-strict`, `runtime-strict`, and `optional-strict` extras
+  that were lost in the move from dynamic setup.py metadata to static
+  pyproject metadata. The strict CI legs had been silently installing no test
+  dependencies and failing with "No module named pytest".
 
 ### Removed
 * Dropped support for Python 3.9 and 3.10; the minimum supported Python is now 3.11
