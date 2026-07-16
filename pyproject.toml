@@ -91,6 +91,10 @@ cmake.version = ">=3.15"
 ninja.version = ">=1.10"
 editable.mode = "inplace"
 wheel.packages = ["pyflann_ibeis"]
+# The bindings are pure ctypes (no extension module, nothing links
+# libpython), so a single py3-none wheel per platform works on every
+# supported CPython version.
+wheel.py-api = "py3"
 cmake.args = [
   "-DBUILD_C_BINDINGS=ON",
   "-DBUILD_MATLAB_BINDINGS=OFF",
@@ -113,16 +117,21 @@ license = "BSD"
 dev_status = "stable"
 
 [tool.cibuildwheel]
-build = "cp311-* cp312-* cp313-* cp314-*"
+# The wheel is tagged py3-none (see tool.scikit-build.wheel.py-api), so one
+# build per platform covers every supported Python version. Building under
+# additional interpreters would recompile identical wheels.
+build = "cp313-*"
 build-frontend = "build"
 skip = "pp* *-musllinux_*"
 build-verbosity = 1
-test-requires = [ "-r requirements/tests.txt",]
-test-command = "python {project}/run_tests.py"
+# Quick import/load sanity check only. The full test suite runs against the
+# built wheels on every supported Python version in the test_binpy_wheels CI
+# job, so running it again here would be redundant.
+test-command = "python {project}/dev/ci_smoke_test.py"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 
 [tool.cibuildwheel.linux]
-before-all = "yum update -y && yum install lz4-devel -y"
+before-all = "yum install -y lz4-devel"
 
 [tool.cibuildwheel.windows]
 before-all = "vcpkg install lz4:x64-windows"
