@@ -24,8 +24,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   runs a quick import/load smoke test instead.
 * PyPI uploads now use trusted publishing (OIDC via `gh-action-pypi-publish`
   and the `pypi`/`testpypi` GitHub environments) instead of encrypted twine
-  API tokens. GPG signing of artifacts is unchanged and still uses the
-  `CI_SECRET`-encrypted keys in `dev/`.
+  API tokens. Artifacts are still GPG signed, but the signing keys now live
+  as environment-scoped GitHub secrets (`ci_gpg_secret_transport =
+  "direct_ci"`); the encrypted key files were removed from `dev/` and the
+  imported key is verified against the fingerprint pinned in
+  `dev/public_gpg_key` before signing.
 
 ### Fixed
 * Restored the `tests-strict`, `runtime-strict`, and `optional-strict` extras

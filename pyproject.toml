@@ -127,6 +127,7 @@ cmake.args = [
 [tool.xcookie]
 tags = [ "erotemic", "github", "binpy",]
 ci_pypi_trusted_publishing = true
+ci_gpg_secret_transport = "direct_ci"
 mod_name = "pyflann_ibeis"
 repo_name = "pyflann_ibeis"
 os = [ "linux" ]
