@@ -9,6 +9,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 * Python 3.14 support (wheels, classifiers, and CI)
 
+### Changed
+* Wheels are now built once per platform and tagged `py3-none`. The bindings
+  are pure ctypes (no extension module), so the binaries never depended on the
+  Python version; previously an identical wheel was rebuilt for each CPython.
+* Wheels no longer bundle the unused C++ library (`libflann_cpp*`), static
+  archives, or duplicate SOVERSION copies of `libflann`; only the shared
+  C-bindings library that the ctypes layer loads is shipped. This roughly
+  quarters the uncompressed wheel size and halves native compile time
+  (which was doubled again on MSVC by the static+shared rebuild).
+* CI: pushes to PR branches no longer trigger a second duplicate run; vcpkg
+  lz4 binaries are cached on Windows; the full test suite runs once per wheel
+  in the dedicated test jobs instead of also inside cibuildwheel, which now
+  runs a quick import/load smoke test instead.
+
 ### Removed
 * Dropped support for Python 3.9 and 3.10; the minimum supported Python is now 3.11
 
