@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Python 3.14 support (wheels, classifiers, and CI)
 
 ### Changed
+* Deployment moved out of `tests.yml` into an xcookie-generated
+  `.github/workflows/release.yml` (the workflow filename the PyPI/TestPyPI
+  trusted publishers are registered against). Releases are cut by pushing to
+  the `release` branch; CI tags `v$VERSION` on success. `tests.yml` now only
+  lints, builds, and tests on `main` and PRs.
 * Wheels are now built once per platform and tagged `py3-none`. The bindings
   are pure ctypes (no extension module), so the binaries never depended on the
   Python version; previously an identical wheel was rebuilt for each CPython.
