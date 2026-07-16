@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.15)
 set (CMAKE_CXX_STANDARD 11)
 
 
@@ -27,7 +27,17 @@ ${cmd}\"\"\"")
   string(STRIP "${_output}" _output)
   set(${outvar} "${_output}" PARENT_SCOPE)
 endfunction()
-_pycmd(FLANN_IBEIS_VERSION "import setup; print(setup.version)")
+if (SKBUILD AND DEFINED SKBUILD_PROJECT_VERSION)
+  set(FLANN_IBEIS_VERSION "${SKBUILD_PROJECT_VERSION}")
+else()
+  file(READ "${PROJECT_SOURCE_DIR}/pyflann_ibeis/__init__.py" _pyflann_ibeis_init)
+  string(REGEX MATCH "__version__ = ['\"]([^'\"]+)['\"]" _pyflann_ibeis_version_match "${_pyflann_ibeis_init}")
+  if (CMAKE_MATCH_1)
+    set(FLANN_IBEIS_VERSION "${CMAKE_MATCH_1}")
+  else()
+    message(FATAL_ERROR "Could not parse pyflann_ibeis version from pyflann_ibeis/__init__.py")
+  endif()
+endif()
 
 message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
 
@@ -227,9 +237,18 @@ set(targets_export_name "flann-targets")
 set(namespace "flann::")
 
 if (SKBUILD)
-  # Override output paths when using scikit-build
+  # Override install paths when using scikit-build or scikit-build-core
   set(FLANN_LIB_INSTALL_DIR "pyflann_ibeis/lib")
   set(FLANN_INCLUDE_INSTALL_DIR "pyflann_ibeis/include")
+
+  # For editable inplace builds, put built libraries directly in the source package.
+  if (SKBUILD_STATE STREQUAL "editable")
+    set(_PYFLANN_EDITABLE_LIB_DIR "${PROJECT_SOURCE_DIR}/pyflann_ibeis/lib")
+    file(MAKE_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${_PYFLANN_EDITABLE_LIB_DIR}$<0:>")
+  endif()
 endif()
 
 if (NOT SKBUILD)

@@ -1,8 +1,133 @@
 [build-system]
-requires = [ "setuptools>=41.0.1", "wheel", "scikit-build>=0.9.0", "numpy", "ninja", "cmake"]
+requires = ["scikit-build-core>=0.11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "pyflann_ibeis"
+version = "2.5.0"
+description = "FLANN (for IBEIS) - Fast Library for Approximate Nearest Neighbors"
+readme = "README.rst"
+requires-python = ">=3.11"
+license = { text = "BSD" }
+authors = [
+  { name = "Jon Crall" },
+  { name = "Marius Muja" },
+]
+classifiers = [
+  "Development Status :: 6 - Mature",
+  "License :: OSI Approved :: BSD License",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: Unix",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+  "numpy>=2.3.2     ; python_version < '4.0'  and python_version >= '3.14'",
+  "numpy>=2.1.0     ; python_version < '3.14' and python_version >= '3.13'",
+  "numpy>=1.26.0    ; python_version < '3.13' and python_version >= '3.12'",
+  "numpy>=1.23.2    ; python_version < '3.12' and python_version >= '3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.com/Erotemic/pyflann_ibeis"
+Repository = "https://github.com/Erotemic/pyflann_ibeis"
+
+[project.optional-dependencies]
+runtime = [
+  "numpy>=2.3.2     ; python_version < '4.0'  and python_version >= '3.14'",
+  "numpy>=2.1.0     ; python_version < '3.14' and python_version >= '3.13'",
+  "numpy>=1.26.0    ; python_version < '3.13' and python_version >= '3.12'",
+  "numpy>=1.23.2    ; python_version < '3.12' and python_version >= '3.11'",
+]
+tests = [
+  "xdoctest>=1.1.3",
+  "ubelt >= 1.3.4",
+  "pytest>=9.0.0    ; python_version < '4.0'  and python_version >= '3.14'",
+  "pytest>=6.2.5    ; python_version < '3.14' and python_version >= '3.11'",
+  "pytest-cov>=3.0.0",
+  "coverage>=7.0.0",
+]
+optional = []
+# The *-strict extras pin the declared minimum versions. CI installs them on
+# dedicated legs to verify the floors of the loose specifications still work.
+# The old dynamic setup.py used to derive these from the loose extras; with
+# static metadata they must be kept in sync by hand.
+runtime-strict = [
+  "numpy==2.3.2     ; python_version < '4.0'  and python_version >= '3.14'",
+  "numpy==2.1.0     ; python_version < '3.14' and python_version >= '3.13'",
+  "numpy==1.26.0    ; python_version < '3.13' and python_version >= '3.12'",
+  "numpy==1.23.2    ; python_version < '3.12' and python_version >= '3.11'",
+]
+tests-strict = [
+  "xdoctest==1.1.3",
+  "ubelt==1.3.4",
+  "pytest==9.0.0    ; python_version < '4.0'  and python_version >= '3.14'",
+  "pytest==6.2.5    ; python_version < '3.14' and python_version >= '3.11'",
+  "pytest-cov==3.0.0",
+  "coverage==7.0.0",
+]
+optional-strict = []
+build = [
+  "cibuildwheel>=2.17.0",
+  "scikit-build-core>=0.11",
+  "cmake",
+  "ninja",
+]
+docs = [
+  "sphinx >= 5.0.1",
+  "sphinx-autobuild >= 2021.3.14",
+  "sphinx_rtd_theme >= 1.0.0",
+  "sphinxcontrib-napoleon >= 0.7",
+  "sphinx-autoapi >= 1.8.4",
+  "Pygments >= 2.9.0",
+  "myst_parser >= 0.18.0",
+  "sphinx-reredirects >= 0.0.1",
+]
+all = [
+  "numpy>=2.3.2     ; python_version < '4.0'  and python_version >= '3.14'",
+  "numpy>=2.1.0     ; python_version < '3.14' and python_version >= '3.13'",
+  "numpy>=1.26.0    ; python_version < '3.13' and python_version >= '3.12'",
+  "numpy>=1.23.2    ; python_version < '3.12' and python_version >= '3.11'",
+  "xdoctest>=1.1.3",
+  "ubelt >= 1.3.4",
+  "pytest>=9.0.0    ; python_version < '4.0'  and python_version >= '3.14'",
+  "pytest>=6.2.5    ; python_version < '3.14' and python_version >= '3.11'",
+  "pytest-cov>=3.0.0",
+  "coverage>=7.0.0",
+  "cibuildwheel>=2.17.0",
+  "scikit-build-core>=0.11",
+  "cmake",
+  "ninja",
+]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+cmake.version = ">=3.15"
+ninja.version = ">=1.10"
+editable.mode = "inplace"
+wheel.packages = ["pyflann_ibeis"]
+# The bindings are pure ctypes (no extension module, nothing links
+# libpython), so a single py3-none wheel per platform works on every
+# supported CPython version.
+wheel.py-api = "py3"
+cmake.args = [
+  "-DBUILD_C_BINDINGS=ON",
+  "-DBUILD_MATLAB_BINDINGS=OFF",
+  "-DBUILD_EXAMPLES=OFF",
+  "-DBUILD_TESTS=OFF",
+  "-DBUILD_DOC=OFF",
+]
 
 [tool.xcookie]
 tags = [ "erotemic", "github", "binpy",]
+ci_pypi_trusted_publishing = true
+ci_gpg_secret_transport = "direct_ci"
 mod_name = "pyflann_ibeis"
 repo_name = "pyflann_ibeis"
 os = [ "linux" ]
@@ -10,37 +135,29 @@ url = "https://github.com/Erotemic/pyflann_ibeis"
 description = "pyflann fork for IBEIS"
 author = ['Jon Crall', 'Marius Muja']
 author_email="erotemic@gmail.com"
-min_python = '3.9'
+min_python = '3.11'
 license = "BSD"
 dev_status = "stable"
 
 [tool.cibuildwheel]
-build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
-#build = "cp312-*"
+# The wheel is tagged py3-none (see tool.scikit-build.wheel.py-api), so one
+# build per platform covers every supported Python version. Building under
+# additional interpreters would recompile identical wheels.
+build = "cp313-*"
 build-frontend = "build"
 skip = "pp* *-musllinux_*"
 build-verbosity = 1
-test-requires = [ "-r requirements/tests.txt",]
-test-command = "python {project}/run_tests.py"
-
-
-# See: ~/code/vtool_ibeis_ext/dev/build_base_docker.py
+# Quick import/load sanity check only. The full test suite runs against the
+# built wheels on every supported Python version in the test_binpy_wheels CI
+# job, so running it again here would be redundant.
+test-command = "python {project}/dev/ci_smoke_test.py"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
-#manylinux-x86_64-image = "quay.io/erotemic/manylinux2014_x86_64_for:lz4"
-#manylinux-i686-image = "quay.io/erotemic/manylinux2014_i686_for:lz4"
 
 [tool.cibuildwheel.linux]
-#before-all = "yum install epel-release lz4 lz4-devel -y"
-before-all = "yum update -y && yum install lz4-devel -y"
+before-all = "yum install -y lz4-devel"
 
 [tool.cibuildwheel.windows]
-# Windows wheels use vcpkg. To reproduce locally, ensure VCPKG_ROOT is set and run:
-#   vcpkg install lz4:x64-windows
-#   cmake -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ...
 before-all = "vcpkg install lz4:x64-windows"
-
-#[tool.cibuildwheel.macos]
-#before-all = "brew install lz4"
 
 [tool.pytest.ini_options]
 addopts = "-p no:doctest --xdoctest --xdoctest-style=google --ignore-glob=bin --ignore-glob=setup.py --ignore-glob=docs --ignore-glob=htmlcov"

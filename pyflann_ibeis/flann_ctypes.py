@@ -30,6 +30,9 @@ from ctypes import (Structure, c_char_p, c_int, c_float, c_uint, c_long,
 from numpy.ctypeslib import ndpointer
 import os
 import sys
+import atexit
+from contextlib import ExitStack
+from importlib import resources as importlib_resources
 from typing import Callable, Dict, Any
 
 STRING = c_char_p
@@ -143,17 +146,20 @@ allowed_types = [ float32, float64, uint8, int32]
 FLANN_INDEX = c_void_p
 
 
+_RESOURCE_STACK = ExitStack()
+atexit.register(_RESOURCE_STACK.close)
+
+
 def load_flann_library():
     """
     Returns:
         Tuple[ModuleType, PathLike]
     """
 
-    root_dir = os.path.abspath(os.path.dirname(__file__))
-
     attempts = []
 
     def try_lib(libpath):
+        libpath = os.fspath(libpath)
         attempts.append(libpath)
         flannlib = cdll[libpath]
         return (flannlib, libpath)
@@ -164,6 +170,27 @@ def load_flann_library():
         libnames = ['flann.dll', 'libflann.dll']
     elif sys.platform == 'darwin':
         libnames = ['libflann.dylib']
+
+    # First try package resources. This supports editable redirect mode,
+    # where binaries live in the install layout rather than next to sources.
+    try:
+        pkg_root = importlib_resources.files('pyflann_ibeis')
+    except Exception:
+        pkg_root = None
+
+    if pkg_root is not None:
+        for libname in libnames:
+            try:
+                resource = pkg_root.joinpath(libdir, libname)
+                if resource.is_file():
+                    libpath = _RESOURCE_STACK.enter_context(
+                        importlib_resources.as_file(resource)
+                    )
+                    return try_lib(libpath)
+            except Exception:
+                pass
+
+    root_dir = os.path.abspath(os.path.dirname(__file__))
 
     while root_dir is not None:
         for libname in libnames:
@@ -183,8 +210,6 @@ def load_flann_library():
         else:
             root_dir = tmp
 
-    # if we didn't find the library so far, try loading without
-    # a full path as a last resort
     for libname in libnames:
         try:
             libpath = libname

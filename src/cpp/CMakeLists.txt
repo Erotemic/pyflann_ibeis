@@ -34,9 +34,13 @@ set(FAKE_C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 set(FAKE_CU_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 set(FAKE_CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/flann/flann.h")
 
-add_library(flann_cpp_s STATIC ${CPP_SOURCES})
-
 message(STATUS "LZ4_LIBRARIES = ${LZ4_LIBRARIES}")
+
+# The Python wheel (SKBUILD) only needs the C-bindings shared library that
+# flann_ctypes loads (libflann.so / flann.dll). The C++ library and the
+# static archives are only built for standalone (non-SKBUILD) installs.
+if (NOT SKBUILD)
+add_library(flann_cpp_s STATIC ${CPP_SOURCES})
 
 target_link_libraries(flann_cpp_s ${LZ4_LIBRARIES})
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
@@ -94,6 +98,7 @@ if (BUILD_CUDA_LIB)
        DEFINE_SYMBOL FLANN_EXPORTS
     )
 endif()
+endif(NOT SKBUILD)
 
 
 if (USE_MPI AND HDF5_IS_PARALLEL AND NOT SKBUILD)
@@ -109,12 +114,19 @@ endif()
 
 
 if (BUILD_C_BINDINGS)
-    add_library(flann_s STATIC ${C_SOURCES})
-    target_link_libraries(flann_s ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
-    if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
-        set_target_properties(flann_s PROPERTIES COMPILE_FLAGS -fPIC)
+    # On the Linux/GCC path the shared library is produced by whole-archive
+    # linking the static library, so flann_s is required there. Elsewhere the
+    # shared library compiles the sources directly, so under SKBUILD we skip
+    # the static build entirely (it would compile everything a second time
+    # only to produce an archive the wheel does not ship).
+    if (NOT SKBUILD OR (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC))
+        add_library(flann_s STATIC ${C_SOURCES})
+        target_link_libraries(flann_s ${SPECIAL_PRE_FLAGS} ${LZ4_LIBRARIES} ${SPECIAL_POST_FLAGS})
+        if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
+            set_target_properties(flann_s PROPERTIES COMPILE_FLAGS -fPIC)
+        endif()
+        set_property(TARGET flann_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
     endif()
-    set_property(TARGET flann_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
         add_library(flann SHARED ${FAKE_C_SOURCES})
@@ -131,11 +143,20 @@ if (BUILD_C_BINDINGS)
 
     message(STATUS "FLANN_IBEIS_VERSION = ${FLANN_IBEIS_VERSION}")
     message(STATUS "FLANN_SOVERSION = ${FLANN_SOVERSION}")
-    set_target_properties(flann PROPERTIES
-       VERSION ${FLANN_IBEIS_VERSION}
-       SOVERSION ${FLANN_SOVERSION}
-       DEFINE_SYMBOL FLANN_EXPORTS
-    )
+    if (SKBUILD)
+        # No VERSION/SOVERSION for the wheel: the wheel format flattens the
+        # libflann.so.X symlinks into full duplicate copies of the library,
+        # and flann_ctypes loads the unversioned name.
+        set_target_properties(flann PROPERTIES
+           DEFINE_SYMBOL FLANN_EXPORTS
+        )
+    else()
+        set_target_properties(flann PROPERTIES
+           VERSION ${FLANN_IBEIS_VERSION}
+           SOVERSION ${FLANN_SOVERSION}
+           DEFINE_SYMBOL FLANN_EXPORTS
+        )
+    endif()
 endif()
 
 
@@ -190,28 +211,18 @@ install (
 )
 
 else()
-    # Only install the library files when building with skbuild
+    # Only install the C-bindings shared library when building a Python
+    # wheel. flann_ctypes loads libflann.so / flann.dll exclusively; the C++
+    # library and the static archives are dead weight in the wheel.
     install (
-        TARGETS flann_cpp flann_cpp_s
-        EXPORT ${targets_export_name}
-        # Fallback for Windows wheels: ensure DLLs land next to the Python package
-        # so flann_ctypes can load them from pyflann_ibeis/lib.
+        TARGETS flann
         RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
         LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
-        ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
-    )
-    install (
-        TARGETS flann flann_s
-        EXPORT ${targets_export_name}
-        # Fallback for Windows wheels: place flann.dll in the package lib dir.
-        RUNTIME DESTINATION ${FLANN_LIB_INSTALL_DIR}
-        LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
-        ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
     )
     if (WIN32)
         # Extra fallback: some generators still skip DLLs in the install step.
-        # Force-install the runtime DLLs into the package lib directory.
-        install(FILES $<TARGET_FILE:flann> $<TARGET_FILE:flann_cpp>
+        # Force-install the runtime DLL into the package lib directory.
+        install(FILES $<TARGET_FILE:flann>
             DESTINATION ${FLANN_LIB_INSTALL_DIR})
         # Also bundle lz4.dll if found, because flann.dll depends on it.
         if (LZ4_RUNTIME_LIBRARY)
