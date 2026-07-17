@@ -54,25 +54,11 @@ tests = [
   "coverage>=7.0.0",
 ]
 optional = []
-# The *-strict extras pin the declared minimum versions. CI installs them on
-# dedicated legs to verify the floors of the loose specifications still work.
-# The old dynamic setup.py used to derive these from the loose extras; with
-# static metadata they must be kept in sync by hand.
-runtime-strict = [
-  "numpy==2.3.2     ; python_version < '4.0'  and python_version >= '3.14'",
-  "numpy==2.1.0     ; python_version < '3.14' and python_version >= '3.13'",
-  "numpy==1.26.0    ; python_version < '3.13' and python_version >= '3.12'",
-  "numpy==1.23.2    ; python_version < '3.12' and python_version >= '3.11'",
-]
-tests-strict = [
-  "xdoctest==1.1.3",
-  "ubelt==1.3.4",
-  "pytest==9.0.0    ; python_version < '4.0'  and python_version >= '3.14'",
-  "pytest==6.2.5    ; python_version < '3.14' and python_version >= '3.11'",
-  "pytest-cov==3.0.0",
-  "coverage==7.0.0",
-]
-optional-strict = []
+# Note: the old hand-maintained *-strict extras (== floor pins) are gone.
+# Strictness is now modeled by the lockfile CI legs: dev/refresh_locks.sh
+# exports requirements/locks/*.txt from uv.lock, and CI installs those
+# pinned sets on dedicated legs. Keeping ==pins as extras would also drag
+# the universal uv.lock resolution down to the floors.
 build = [
   "cibuildwheel>=2.17.0",
   "scikit-build-core>=0.11",
@@ -125,8 +111,9 @@ cmake.args = [
 ]
 
 [tool.xcookie]
-tags = [ "erotemic", "github", "binpy",]
+tags = [ "erotemic", "github", "binpy", "vcpkg",]
 ci_pypi_trusted_publishing = true
+ci_versionless_wheels = true
 ci_gpg_secret_transport = "direct_ci"
 mod_name = "pyflann_ibeis"
 repo_name = "pyflann_ibeis"
