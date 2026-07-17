@@ -356,6 +356,7 @@ class FLANN(object):
 
         qpts = ensure_2d_array(qpts, default_flags)
 
+        assert self.__curindex_data is not None, 'no index has been built'
         npts, dim = self.__curindex_data.shape
 
         if qpts.size == dim:
@@ -402,6 +403,7 @@ class FLANN(object):
         if self.__curindex_type != query.dtype.type:
             raise FLANNException('Index and query must have the same type')
 
+        assert self.__curindex_data is not None, 'no index has been built'
         npts, dim = self.__curindex_data.shape
         assert query.shape[0] == dim, 'data and query must have the same dims'
 
@@ -588,6 +590,7 @@ class FLANN(object):
         Returns:
             Tuple[int, int]:
         """
+        assert self.__curindex_data is not None, 'no index has been built'
         npts, dim = self.__curindex_data.shape
         for _extra in self.__added_data:
             npts += _extra.shape[0]

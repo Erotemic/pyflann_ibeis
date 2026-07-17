@@ -49,7 +49,9 @@ class CustomStructure(Structure):
 
     def __init__(self):
         Structure.__init__(self)
-        self.__field_names = [ f for (f, t) in self._fields_]
+        # ctypes _fields_ entries may be (name, type) or (name, type, bits),
+        # so index rather than unpack.
+        self.__field_names = [fields[0] for fields in self._fields_]
         self.update(self._defaults_)
 
     def update(self, dict):
@@ -238,6 +240,7 @@ class FlannLib(object):
     find_nearest_neighbors_index : Dict[Any, Callable] = {}
     radius_search : Dict[Any, Callable] = {}
     compute_cluster_centers : Dict[Any, Callable] = {}
+    free_index : Dict[Any, Callable] = {}
 
 flann = FlannLib()
 
@@ -268,7 +271,7 @@ def define_functions(text: str):
 define_functions(r"""
 flannlib.flann_build_index_%(C)s.restype = FLANN_INDEX
 flannlib.flann_build_index_%(C)s.argtypes = [
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # dataset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
         c_int,  # rows
         c_int,  # cols
         POINTER(c_float),  # speedup
@@ -292,7 +295,7 @@ define_functions(r"""
 flannlib.flann_load_index_%(C)s.restype = FLANN_INDEX
 flannlib.flann_load_index_%(C)s.argtypes = [
         c_char_p,  #filename
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # dataset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
         c_int,  # rows
         c_int,  # cols
 ]
@@ -313,7 +316,7 @@ define_functions(r"""
 flannlib.flann_add_points_%(C)s.restype = None
 flannlib.flann_add_points_%(C)s.argtypes = [
         FLANN_INDEX, # index_id
-        ndpointer(%(numpy)s, ndim = 2, flags='aligned, c_contiguous'), # dataset
+        ndpointer(%(numpy)s, ndim = 2, flags=['ALIGNED', 'C_CONTIGUOUS']), # dataset
         c_int, # rows
         c_int, # cols
         c_float, # rebuild_threshhold
@@ -335,13 +338,13 @@ flann.remove_point[%(numpy)s] = flannlib.flann_remove_point_%(C)s
 define_functions(r"""
 flannlib.flann_find_nearest_neighbors_%(C)s.restype = c_int
 flannlib.flann_find_nearest_neighbors_%(C)s.argtypes = [
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # dataset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
         c_int,  # rows
         c_int,  # cols
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # testset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # testset
         c_int,  # tcount
-        ndpointer(int32, ndim=2, flags='aligned, c_contiguous, writeable'),  # result
-        ndpointer(float32, ndim=2, flags='aligned, c_contiguous, writeable'),  # dists
+        ndpointer(int32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
+        ndpointer(float32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
         c_int,  # nn
         POINTER(FLANNParameters)  # flann_params
 ]
@@ -352,13 +355,13 @@ flann.find_nearest_neighbors[%(numpy)s] = flannlib.flann_find_nearest_neighbors_
 
 flannlib.flann_find_nearest_neighbors_double.restype = c_int
 flannlib.flann_find_nearest_neighbors_double.argtypes = [
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous'),  # dataset
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
     c_int,  # rows
     c_int,  # cols
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous'),  # testset
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # testset
     c_int,  # tcount
-    ndpointer(int32, ndim=2, flags='aligned, c_contiguous, writeable'),  # result
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous, writeable'),  # dists
+    ndpointer(int32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
     c_int,  # nn
     POINTER(FLANNParameters)  # flann_params
 ]
@@ -370,10 +373,10 @@ define_functions(r"""
 flannlib.flann_find_nearest_neighbors_index_%(C)s.restype = c_int
 flannlib.flann_find_nearest_neighbors_index_%(C)s.argtypes = [
         FLANN_INDEX,  # index_id
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # testset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # testset
         c_int,  # tcount
-        ndpointer(int32, ndim=2, flags='aligned, c_contiguous, writeable'),  # result
-        ndpointer(float32, ndim=2, flags='aligned, c_contiguous, writeable'),  # dists
+        ndpointer(int32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
+        ndpointer(float32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
         c_int,  # nn
         POINTER(FLANNParameters) # flann_params
 ]
@@ -383,10 +386,10 @@ flann.find_nearest_neighbors_index[%(numpy)s] = flannlib.flann_find_nearest_neig
 flannlib.flann_find_nearest_neighbors_index_double.restype = c_int
 flannlib.flann_find_nearest_neighbors_index_double.argtypes = [
     FLANN_INDEX,  # index_id
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous'),  # testset
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # testset
     c_int,  # tcount
-    ndpointer(int32, ndim=2, flags='aligned, c_contiguous, writeable'),  # result
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous, writeable'),  # dists
+    ndpointer(int32, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
     c_int,  # nn
     POINTER(FLANNParameters)  # flann_params
 ]
@@ -396,9 +399,9 @@ define_functions(r"""
 flannlib.flann_radius_search_%(C)s.restype = c_int
 flannlib.flann_radius_search_%(C)s.argtypes = [
         FLANN_INDEX,  # index_id
-        ndpointer(%(numpy)s, ndim=1, flags='aligned, c_contiguous'),  # query
-        ndpointer(int32, ndim=1, flags='aligned, c_contiguous, writeable'),  # indices
-        ndpointer(float32, ndim=1, flags='aligned, c_contiguous, writeable'),  # dists
+        ndpointer(%(numpy)s, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS']),  # query
+        ndpointer(int32, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # indices
+        ndpointer(float32, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
         c_int,  # max_nn
         c_float,  # radius
         POINTER(FLANNParameters) # flann_params
@@ -409,9 +412,9 @@ flann.radius_search[%(numpy)s] = flannlib.flann_radius_search_%(C)s
 flannlib.flann_radius_search_double.restype = c_int
 flannlib.flann_radius_search_double.argtypes = [
     FLANN_INDEX,  # index_id
-    ndpointer(float64, ndim=1, flags='aligned, c_contiguous'),  # query
-    ndpointer(int32, ndim=1, flags='aligned, c_contiguous, writeable'),  # indices
-    ndpointer(float64, ndim=1, flags='aligned, c_contiguous, writeable'),  # dists
+    ndpointer(float64, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS']),  # query
+    ndpointer(int32, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # indices
+    ndpointer(float64, ndim=1, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # dists
     c_int,  # max_nn
     c_float,  # radius
     POINTER(FLANNParameters)  # flann_params
@@ -422,11 +425,11 @@ flann.radius_search[float64] = flannlib.flann_radius_search_double
 define_functions(r"""
 flannlib.flann_compute_cluster_centers_%(C)s.restype = c_int
 flannlib.flann_compute_cluster_centers_%(C)s.argtypes = [
-        ndpointer(%(numpy)s, ndim=2, flags='aligned, c_contiguous'),  # dataset
+        ndpointer(%(numpy)s, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
         c_int,  # rows
         c_int,  # cols
         c_int,  # clusters
-        ndpointer(float32, flags='aligned, c_contiguous, writeable'),  # result
+        ndpointer(float32, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
         POINTER(FLANNParameters)  # flann_params
 ]
 flann.compute_cluster_centers[%(numpy)s] = flannlib.flann_compute_cluster_centers_%(C)s
@@ -434,17 +437,16 @@ flann.compute_cluster_centers[%(numpy)s] = flannlib.flann_compute_cluster_center
 # double is an exception
 flannlib.flann_compute_cluster_centers_double.restype = c_int
 flannlib.flann_compute_cluster_centers_double.argtypes = [
-    ndpointer(float64, ndim=2, flags='aligned, c_contiguous'),  # dataset
+    ndpointer(float64, ndim=2, flags=['ALIGNED', 'C_CONTIGUOUS']),  # dataset
     c_int,  # rows
     c_int,  # cols
     c_int,  # clusters
-    ndpointer(float64, flags='aligned, c_contiguous, writeable'),  # result
+    ndpointer(float64, flags=['ALIGNED', 'C_CONTIGUOUS', 'WRITEABLE']),  # result
     POINTER(FLANNParameters)  # flann_params
 ]
 flann.compute_cluster_centers[float64] = flannlib.flann_compute_cluster_centers_double
 
 
-flann.free_index = {}
 define_functions(r"""
 flannlib.flann_free_index_%(C)s.restype = None
 flannlib.flann_free_index_%(C)s.argtypes = [
