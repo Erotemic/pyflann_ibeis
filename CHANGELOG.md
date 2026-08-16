@@ -4,7 +4,28 @@ We are currently working on porting this changelog to the specifications in
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Version 2.5.0 - Unreleased
+## Version 2.5.1 - Unreleased
+
+### Changed
+* CI workflows are now regenerated verbatim by xcookie (dev/0.4.0). The
+  efficient single `py3-none` wheel build is expressed via the new
+  `ci_versionless_wheels` xcookie option and the `vcpkg` tag instead of
+  hand-edits, so `xcookie --regen` is safe for the workflows from now on.
+* Windows vcpkg caching switched from the x-gha binary source to xcookie's
+  `actions/cache` of the vcpkg archives/downloads directories.
+* The hand-maintained `*-strict` extras are gone. Strict CI legs now install
+  pinned sets exported from `uv.lock` (`requirements/locks/*.txt`, refreshed
+  via `dev/refresh_locks.sh`), matching xcookie's lockfile CI model.
+* Lint job typechecks with `ty` (xcookie default) instead of mypy.
+
+### Fixed
+* `FlannLib.free_index` is now declared on the class like every other
+  function-family dict instead of being patched onto the instance.
+* `nn_index`, `nn_radius`, and `get_indexed_shape` raise a clear assertion
+  error instead of `AttributeError` when no index has been built.
+
+
+## Version 2.5.0 - Released 2026-07-16
 
 ### Added
 * Python 3.14 support (wheels, classifiers, and CI)
